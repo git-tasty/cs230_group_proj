@@ -51,8 +51,9 @@ int ManagerMenu(){
   cout<<"| 1. See All Customers       |"<<endl;
   cout<<"| 2. See All Technicians.    |"<<endl;
   cout<<"| 3. View All Tickets.       |"<<endl;
-  cout<<"| 4. Log Out.                |"<<endl;
-  cout<<"| 5. Exit Program.           |"<<endl;
+  cout<<"| 4. Complete a Ticket.      |"<<endl;
+  cout<<"| 5. Log Out.                |"<<endl;
+  cout<<"| 6. Exit Program.           |"<<endl;
   cout<<"============================="<<endl;
   cout<<"Enter a Selection: ";
   cin>>selection;
@@ -201,11 +202,11 @@ int main(int argc, char** argv){
         do{
             opt = ManagerMenu();
             switch(opt){
-                case 4:
+                case 5:
                   verification = 0;
                   brkLoop = true;
                   break;
-                case 5: cout<<"Goodbye!"<<endl;
+                case 6: cout<<"Goodbye!"<<endl;
                   brkLoop = true;
                   exit_status = 1;
                   break;
