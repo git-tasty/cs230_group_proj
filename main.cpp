@@ -102,8 +102,8 @@ int login() {
         	newcust.setInfo(name, id, password);
 
         	ofstream custbook;
-        	custbook.open("customerlist.txt");
-        	custbook<<name<<" "<<id<<" "<<password;
+        	custbook.open("customerlist.txt", ios::app);
+        	custbook<<name<<" "<<id<<" "<<password << endl;
         	custbook.close();
 		break;
 		}else if(user_type == 2){
@@ -112,8 +112,8 @@ int login() {
 			newtech.setExpertise(expertise);
 
 			ofstream techbook;
-			techbook.open("technicianlist.txt");
-			techbook << name << " " << id << " " << password << " " << expertise;
+			techbook.open("technicianlist.txt", ios::app);
+			techbook << name << " " << id << " " << password << " " << expertise << endl;
 			techbook.close();
 			break;
 
@@ -278,7 +278,35 @@ int main(int argc, char** argv){
         do{
             opt = ManagerMenu();
             switch(opt){
-                case 5:
+                  case 1:
+			{
+			  ifstream user_list("customerlist.txt");
+			  if (!user_list.is_open()){
+			  	cout << "Failed to Open File!\n";
+			  }
+				string whole;
+				while(getline(user_list, whole))
+				{
+					cout << whole.substr(0, whole.find(" ")) << ": " << whole.substr(whole.find(" "), whole.find(" ")) << endl;
+				}
+				user_list.close();
+			} break;
+		  case 2:
+
+			{
+			  ifstream user_list("technicianlist.txt");
+			  if (!user_list.is_open()){
+			  	cout << "Failed to Open File!\n";
+			  }
+				string whole;
+				while(getline(user_list, whole))
+				{
+					cout << whole.substr(0, whole.find(" ")) << ": " << whole.substr(whole.find(" "), whole.find(" ")) << endl;
+				}
+				user_list.close();
+			} break;
+
+		  case 5:
                   verification = 0;
                   brkLoop = true;
                   break;
