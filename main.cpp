@@ -26,7 +26,7 @@ int MainMenu(){
     cout<<"| 2. View Ticket Status.    |"<<endl;
     cout<<"| 3. View All Your Tickets. |"<<endl;
     cout<<"| 4. Remove Your Ticket.    |"<<endl;
-    cout<<"| 5. Log Out.          .    |"<<endl;
+    cout<<"| 5. Log Out.               |"<<endl;
     cout<<"| 6. Exit Program.          |"<<endl;
     cout<<"============================="<<endl;
     cout<<"Enter a Selection: ";
@@ -55,7 +55,7 @@ int ManagerMenu(){
   cout<<"| 1. See All Customers       |"<<endl;
   cout<<"| 2. See All Technicians.    |"<<endl;
   cout<<"| 3. View All Tickets.       |"<<endl;
-  cout<<"| 4. Complete a Ticket.      |"<<endl;
+  cout<<"| 4. Close a Ticket.         |"<<endl;
   cout<<"| 5. Log Out.                |"<<endl;
   cout<<"| 6. Exit Program.           |"<<endl;
   cout<<"============================="<<endl;
