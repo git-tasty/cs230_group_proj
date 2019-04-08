@@ -5,8 +5,12 @@
 #include <stdlib.h>
 #include <string>
 
+#include "User.h"
+#include "User.cpp"   //comment this line out if you're using Dev C++
 #include "Customer.h"
+#include "Customer.cpp"   //comment this line out if you're using Dev C++
 #include "Technician.h"
+#include "Technician.cpp"   //comment this line out if you're using Dev C++
 
 using namespace std;
 
@@ -22,7 +26,7 @@ int MainMenu(){
     cout<<"| 2. View Ticket Status.    |"<<endl;
     cout<<"| 3. View All Your Tickets. |"<<endl;
     cout<<"| 4. Remove Your Ticket.    |"<<endl;
-    cout<<"| 5. Log In as Employee.    |"<<endl;
+    cout<<"| 5. Log Out.          .    |"<<endl;
     cout<<"| 6. Exit Program.          |"<<endl;
     cout<<"============================="<<endl;
     cout<<"Enter a Selection: ";
@@ -32,7 +36,7 @@ int MainMenu(){
 
 int TechMenu(){
     int selection;
-    cout<<"========= Main Menu ========="<<endl;
+    cout<<"========= Tech Menu  ========="<<endl;
     cout<<"| 1. Claim a Ticket.         |"<<endl;
     cout<<"| 2. Update Ticket Status.   |"<<endl;
     cout<<"| 3. View Technicians.       |"<<endl;
@@ -92,23 +96,29 @@ int login() {
             cout<<"Press 1 to commit this data, otherwise press any other number: ";
             cin>>commit;
         }
-        
+
         if(user_type == 1){
         	Customer newcust;
-        	newcust.setInfo(name, id, password); 
-        	
+        	newcust.setInfo(name, id, password);
+
         	ofstream custbook;
         	custbook.open("customerlist.txt");
         	custbook<<name<<" "<<id<<" "<<password;
         	custbook.close();
+		break;
 		}else if(user_type == 2){
 			Technician newtech;
 			newtech.setInfo(name, id, password);
-			newtech.setExpertise(expertise); 
-			
-			
+			newtech.setExpertise(expertise);
+
+			ofstream techbook;
+			techbook.open("technicianlist.txt");
+			techbook << name << " " << id << " " << password << " " << expertise;
+			techbook.close();
+			break;
+
 		}
-        
+
         /*
 		ofstream userbook;
         userbook.open ("userlist.txt");
@@ -126,10 +136,71 @@ int login() {
 		*/
         break;
     }
-      case 2: verification = 1;
-        break;
-      case 3: verification = 2;
-        break;
+      case 2:
+      {
+      	string temp_user, temp_pass, line;
+	int confirmation = 0;
+	while(confirmation == 0){
+		cout << "Enter your username: ";
+		cin >> temp_user;
+		cout << "Enter your password: ";
+		cin >> temp_pass;
+			ifstream credentials;
+			size_t pos;
+			while(credentials.good()){
+				credentials.open("customerlist.txt");
+				getline(credentials, line);
+				pos=line.find(temp_user);
+				if(pos!=string::npos){
+					pos=line.find(temp_pass);
+					if(pos!=string::npos){
+						string temp_name = line;
+						cout << "Welcome, " << temp_name.substr(0, temp_name.find(" ")) << "!" <<endl;
+						verification = 1;
+						confirmation = 1;
+						break;
+					}
+				}
+				else{
+				cout << "The username or password you typed is incorrect!" <<endl;
+				}
+			}
+	}
+	break;
+      }
+      case 3:
+     	 {
+      	string temp_user, temp_pass, line;
+	int confirmation = 0;
+	while(confirmation == 0){
+		cout << "Enter your username: ";
+		cin >> temp_user;
+		cout << "Enter your password: ";
+		cin >> temp_pass;
+			ifstream credentials;
+			size_t pos;
+			while(credentials.good()){
+				credentials.open("technicianlist.txt");
+				getline(credentials, line);
+				pos=line.find(temp_user);
+				if(pos!=string::npos){
+					pos=line.find(temp_pass);
+					if(pos!=string::npos){
+						string temp_name = line;
+						cout << "Welcome, " << temp_name.substr(0, temp_name.find(" ")) << "!" <<endl;
+						verification = 2;
+						confirmation = 1;
+						break;
+					}
+				}
+				else{
+				cout << "The username or password you typed is incorrect!" <<endl;
+				}
+			}
+	}
+	break;
+      }
+
       case 4:
           {
           cout <<"Enter the Code, Chief:";
@@ -160,6 +231,7 @@ int main(int argc, char** argv){
     }
 
     if (verification == 1){
+      bool brkLoop = false;
         do{
             opt = MainMenu();
             switch(opt){
@@ -172,10 +244,14 @@ int main(int argc, char** argv){
                 case 4:
                   break;
                 case 5: verification = 0;
-                  break;
+			             brkLoop = true;
+                   break;
                 case 6: cout<<"Goodbye!"<<endl;
-            }
-        }while(opt!=6);
+           		brkLoop = true;
+			exit_status = 1;
+			break;
+	    }
+    }while(!brkLoop);
     }
 
     if (verification == 2){
@@ -212,11 +288,6 @@ int main(int argc, char** argv){
                   break;
             }
         }while(!brkLoop);
-    }
-
-    else{
-        cout<<"Somehow you broke our program"<<endl;
-        exit(EXIT_FAILURE);
     }
   }
     return 0;
