@@ -20,47 +20,47 @@ Ticket::Ticket(){
 	setFinishDate("");
 }
 //mutator definitions
-void Ticket::setTickID(string tickid){
-	tickid = tickid;
+void Ticket::setTickID(string tickid_input){
+	tickid = tickid_input;
 }
-void Ticket::setOwnID(string ownid){
-	ownid = ownid;
+void Ticket::setOwnID(string ownids_input){
+	ownid = ownids_input;
 }
-void Ticket::setTechName1(string techname){
-	techname1 = techname;
+void Ticket::setTechName1(string techname_input){
+	techname1 = techname_input;
 }
-void Ticket::setTechName2(string techname){
-	techname2 = techname;
+void Ticket::setTechName2(string techname_input){
+	techname2 = techname_input;
 }
-void Ticket::setWorkHours1(double workhours){
-	workhours1 = workhours;
+void Ticket::setWorkHours1(double workhours_input){
+	workhours1 = workhours_input;
 }
-void Ticket::setWorkHours2(double workhours){
-	workhours2 = workhours;
+void Ticket::setWorkHours2(double workhours_input){
+	workhours2 = workhours_input;
 }
-void Ticket::setExpertise1(int expertise){
-	expertise1 = expertise;
+void Ticket::setExpertise1(int expertise_input){
+	expertise1 = expertise_input;
 }
-void Ticket::setExpertise2(int expertise){
-	expertise2 = expertise;
+void Ticket::setExpertise2(int expertise_input){
+	expertise2 = expertise_input;
 }
-void Ticket::setParts(string parts){
-	parts = parts;
+void Ticket::setParts(string parts_input){
+	parts = parts_input;
 }
-void Ticket::setPartCost(double partcost){
-	partcost = partcost;
+void Ticket::setPartCost(double partcost_input){
+	partcost = partcost_input;
 }
-void Ticket::setIssue(string issue){
-	issue = issue;
+void Ticket::setIssue(string issue_input){
+	issue = issue_input;
 }
-void Ticket::setStatus(string status){
-	status = status;
+void Ticket::setStatus(string status_input){
+	status = status_input;
 }
-void Ticket::setInstallDate(string installdate){
-	installdate = installdate;
+void Ticket::setInstallDate(string installdate_input){
+	installdate = installdate_input;
 }
-void Ticket::setFinishDate(string finishdate){
-	finishdate = finishdate;
+void Ticket::setFinishDate(string finishdate_input){
+	finishdate = finishdate_input;
 }
 //accessor definitions
 string Ticket::getTickID(){
