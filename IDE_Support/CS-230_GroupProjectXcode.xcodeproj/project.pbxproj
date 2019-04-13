@@ -31,14 +31,12 @@
 		109232EE22619DC200F3C2E8 /* CS-230_GroupProjectXcode */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "CS-230_GroupProjectXcode"; sourceTree = BUILT_PRODUCTS_DIR; };
 		109232F822619E0700F3C2E8 /* Customer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Customer.h; path = ../Customer.h; sourceTree = "<group>"; };
 		109232F922619E0700F3C2E8 /* TicketNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TicketNode.cpp; path = ../TicketNode.cpp; sourceTree = "<group>"; };
-		109232FA22619E0700F3C2E8 /* customerlist.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = customerlist.txt; path = ../customerlist.txt; sourceTree = "<group>"; };
 		109232FB22619E0700F3C2E8 /* Ticket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Ticket.cpp; path = ../Ticket.cpp; sourceTree = "<group>"; };
 		109232FC22619E0700F3C2E8 /* Technician.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Technician.h; path = ../Technician.h; sourceTree = "<group>"; };
 		109232FD22619E0700F3C2E8 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = ../User.h; sourceTree = "<group>"; };
 		109232FE22619E0700F3C2E8 /* Technician.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Technician.cpp; path = ../Technician.cpp; sourceTree = "<group>"; };
 		109232FF22619E0800F3C2E8 /* read me, chief.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "read me, chief.txt"; path = "../read me, chief.txt"; sourceTree = "<group>"; };
 		1092330022619E0800F3C2E8 /* User.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = User.cpp; path = ../User.cpp; sourceTree = "<group>"; };
-		1092330122619E0800F3C2E8 /* technicianlist.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = technicianlist.txt; path = ../technicianlist.txt; sourceTree = "<group>"; };
 		1092330222619E0800F3C2E8 /* Ticket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Ticket.h; path = ../Ticket.h; sourceTree = "<group>"; };
 		1092330322619E0800F3C2E8 /* Customer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Customer.cpp; path = ../Customer.cpp; sourceTree = "<group>"; };
 		1092330422619E0800F3C2E8 /* TicketNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TicketNode.h; path = ../TicketNode.h; sourceTree = "<group>"; };
@@ -62,11 +60,9 @@
 				1092330522619E0800F3C2E8 /* main.cpp */,
 				1092330322619E0800F3C2E8 /* Customer.cpp */,
 				109232F822619E0700F3C2E8 /* Customer.h */,
-				109232FA22619E0700F3C2E8 /* customerlist.txt */,
 				109232FF22619E0800F3C2E8 /* read me, chief.txt */,
 				109232FE22619E0700F3C2E8 /* Technician.cpp */,
 				109232FC22619E0700F3C2E8 /* Technician.h */,
-				1092330122619E0800F3C2E8 /* technicianlist.txt */,
 				109232FB22619E0700F3C2E8 /* Ticket.cpp */,
 				1092330222619E0800F3C2E8 /* Ticket.h */,
 				109232F922619E0700F3C2E8 /* TicketNode.cpp */,
@@ -267,6 +263,8 @@
 		109232F622619DC200F3C2E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2U2K8SJ7Q7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -276,6 +274,8 @@
 		109232F722619DC200F3C2E8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2U2K8SJ7Q7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
