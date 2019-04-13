@@ -214,7 +214,7 @@ void TicketList::UpdateTicket(string tickid){
     curr = head;
     while (curr != NULL){
         if(curr -> tick.getTickID() == tickid){
-            int select;
+            int select = 0;
             while(select != 7){
                 
                 

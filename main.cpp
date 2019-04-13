@@ -21,6 +21,7 @@
 #endif
 //---------- Define -----------------|
 using namespace std;
+#define Name_Limit 20
 //------ Function_Prototypes --------|
 int MainMenu();
 int TechMenu();
@@ -28,8 +29,12 @@ int ManagerMenu();
 struct current_login login();
 //---------- Structures -------------|
 struct current_login {
+    string first_name;
+    string Last_name;
     string Username;
+    string Password;
     string id;
+    int expertise;
     int User_AuthLevel;
 } customer, technician;
 //---------- End Setup ---------------|
@@ -275,15 +280,17 @@ struct current_login login() {
     int choice, user_type = 0;
     int commit = 0;
     int expertise = 0;
-    string password, Username, id, the_code;
-    
-    cout<<"1. Create an Account"<<endl;
-    cout<<"2. Login as a Customer"<<endl;
-    cout<<"3. Login as a Technician"<<endl;
-    cout<<"4. I'm the Manager"<<endl;
-    cout<<"Enter a choice: ";
+    string first_name,Last_Name,password, Username, id,the_code;
+    //when the program first loads display starting menu
+    cout << string( 100, '\n' );//clear display
+    cout<<"======= Welcome To AutoTicketing V1.4 ========"<<endl;
+    cout<<"| 1. Create a New Account                    |"<<endl;
+    cout<<"| 2. Customer Login                          |"<<endl;
+    cout<<"| 3. Technician Login                        |"<<endl;
+    cout<<"| 4. Manager Login                           |"<<endl;
+    cout<<"=============================================="<<endl;
+    cout<<"Selection: ";
     cin>>choice;
-    
     switch(choice){
         case 1://Create New User Account
         {
@@ -292,6 +299,10 @@ struct current_login login() {
                 //setup the display to look nice :)
                 cout << string( 100, '\n' );
                 cout<<"======= New Account ======="<<endl;
+                cout<<"First Name: ";
+                cin>>first_name;
+                cout<<"Last Name: ";
+                cin>>Last_Name;
                 cout<<"Login Username: ";
                 cin>>Username;
                 cout<<"ID Number: ";
@@ -309,8 +320,18 @@ struct current_login login() {
                 cout<<"======= Confirm ======="<<endl;
                 if(user_type==1)//check if Customer or Technician
                     cout<<"Account type: [Customer]"<<endl;
-                else
+                else{
                     cout<<"Account type: [Technician]"<<endl;
+                    if(expertise==1){
+                        cout<<"Expertise Level: [Beginner]"<<endl;
+                    }else if(expertise==2){
+                        cout<<"Expertise Level: [Intermediate]"<<endl;
+                    }else{
+                        cout<<"Expertise Level: [Expert]"<<endl;
+                    }
+                }
+                cout<<"First Name: ["<<first_name<<"]"<<endl;
+                cout<<"Last Name: ["<<Last_Name<<"]"<<endl;
                 cout<<"Username: ["<<Username<<"]"<<endl;
                 cout<<"Password: ["<<password<<"]"<<endl;
                 cout<<"Account ID: ["<<id<<"]"<<endl;
@@ -318,25 +339,18 @@ struct current_login login() {
                 cout<<"Press 1 to Create Account"<<endl<<"Press any other key to Exit"<<endl<<"Choice: ";
                 cin>>commit;
             }
-            
             if(user_type == 1){//when the user_type is 1 we save the new account to the Customer File
-                Customer newcust;//create a Customer instance
-                newcust.setInfo(Username, id, password);//call the method to save the information to the linked list
-                customer.id = id;//set global values
-                customer.Username = Username;//set global values
+                expertise=0;
+                User_AuthLevel =1;
                 ofstream custbook;//start file/IO
-                custbook.open("customerlist.txt", ios::app);//append Mode
-                custbook<<Username<<" "<<id<<" "<<password << endl;
+                custbook.open("Customers.txt", ios::app);//append Mode
+                custbook<<first_name<<" "<<Last_Name<<" "<<Username<<" "<<password<<" "<<id<<" "<<expertise<<endl;
                 custbook.close();//close the file
             }else if(user_type == 2){//when the user_type is 2 we save the new account to the Technician File
-                Technician newtech;//create a Technician instance
-                newtech.setInfo(Username, id, password);
-                newtech.setExpertise(expertise);//call the method to save the information to the linked list
-                technician.id = id;//set global values
-                technician.Username = Username;//set global values
+                User_AuthLevel=2;
                 ofstream techbook;//start file/IO
-                techbook.open("technicianlist.txt", ios::app);//append Mode
-                techbook << Username << " " << id << " " << password << " " << expertise << endl;
+                techbook.open("Technicians.txt", ios::app);//append Mode
+                techbook<<first_name<<" "<<Last_Name<<" "<<Username<<" "<<password<<" "<<id<<" "<<expertise<<endl;
                 techbook.close();//close the file
             }
             break;
@@ -356,7 +370,7 @@ struct current_login login() {
                 ifstream credentials;//start the file/IO Stream
                 size_t pos;//location of the username in the line
                 while(credentials.good()){
-                    credentials.open("customerlist.txt");//open the file
+                    credentials.open("Customers.txt");//open the file
                     getline(credentials, line);//read the line in from the file
                     pos=line.find(temp_user);//get the location of the username in the file
                     if(pos!=string::npos){//check to see if the username exists on the line
@@ -400,28 +414,55 @@ struct current_login login() {
             }
             break;
         }
-        case 3:
+        case 3: //technician login
         {
             string temp_user, temp_pass, line;
             int confirmation = 0;
             while(confirmation == 0){
-                cout << "Enter your username: ";
+                //setup the display to look nice :)
+                cout << string( 100, '\n' );
+                cout<<"======= Technician Login ======="<<endl;
+                cout << "Username: ";
                 cin >> temp_user;
-                cout << "Enter your password: ";
+                cout << "Password: ";
                 cin >> temp_pass;
                 ifstream credentials;
                 size_t pos;
                 while(credentials.good()){
-                    credentials.open("technicianlist.txt");
+                    credentials.open("Technicians.txt");
                     getline(credentials, line);
                     pos=line.find(temp_user);
                     if(pos!=string::npos){
                         pos=line.find(temp_pass);
                         if(pos!=string::npos){
-                            string temp_name = line;
-                            cout << "Welcome, " << temp_name.substr(0, temp_name.find(" ")) << "!" <<endl;
-                            User_AuthLevel = 2;
-                            confirmation = 1;
+                            string temp_name = line;//copy the line
+                            cout<<"======= Login Acceped ======="<<endl;
+                            cout << "Welcome, " << temp_name.substr(0, temp_name.find(" ")) << "!" <<endl;//get the username from the line and print it to the user as the welcome message
+                            User_AuthLevel = 2;//set globsl verifaction to customer
+                            confirmation = 1;//set the global value for loggin in to 1
+                            //first we set the global Username to the username entered becuase we know that the usename worked
+                            Username = temp_user;
+                            //next we copy the string so we can motify it
+                            string tempstring = line;
+                            string temp2 =line;
+                            //first erase the username from the string
+                            tempstring.erase(0, temp_user.length());
+                            //next erase the password from the string
+                            tempstring.erase(tempstring.find(temp_pass),tempstring.length());
+                            //now we can remove all spaces from it
+                            for(int i=0; i<tempstring.length(); i++)
+                                if(tempstring[i] == ' ') tempstring.erase(i,1);
+                            //finaly we save the user id to the global value so it can be passed on
+                            id = tempstring;
+                            //using sscaf to parse the file due to c having more power over strings
+                            char fname[Name_Limit],lname[Name_Limit],uname[Name_Limit],pass[Name_Limit],tid[Name_Limit];
+                            sscanf(tempstring.c_str(), "%s %s %s %s %s %d",&fname,&lname,&uname,&pass,&tid,&expertise);
+                            first_name=fname;
+                            Last_Name = lname;
+                            Username = uname;
+                            password = pass;
+                            id = tid;
+                            cout<<first_name<<Last_Name<<Username<<password<<id<<expertise;
                             break;
                         }
                     }
@@ -432,7 +473,6 @@ struct current_login login() {
             }
             break;
         }
-            
         case 4:
         {
             cout <<"Enter the Code, Chief:";
@@ -448,12 +488,13 @@ struct current_login login() {
         }
         default: cout << choice << " is an invalid Menu_Selectionion!" << endl;
     }
-    //here we set the Verifacation level to the return type
+    //log the new user in and pass them back to main
     Login_Auth.User_AuthLevel = User_AuthLevel;
-    //here we fill the structure with the information we get from the login
-    Login_Auth.id = id;
+    Login_Auth.first_name = first_name;
+    Login_Auth.Last_name = Last_Name;
     Login_Auth.Username = Username;
-    //last we return the structure containing all of our information
-    return Login_Auth;
+    Login_Auth.Password = password;
+    Login_Auth.id = id;
+    Login_Auth.expertise = expertise;
+    return Login_Auth;//return to main
     }
-    
