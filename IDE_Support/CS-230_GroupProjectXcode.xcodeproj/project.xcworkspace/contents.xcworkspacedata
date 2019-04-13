@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:cs230_group_proj.xcodeproj">
+      location = "self:CS-230_GroupProjectXcode.xcodeproj">
    </FileRef>
 </Workspace>
