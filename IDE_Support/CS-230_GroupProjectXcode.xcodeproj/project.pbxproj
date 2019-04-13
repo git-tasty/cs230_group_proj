@@ -267,6 +267,8 @@
 		109232F622619DC200F3C2E8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2U2K8SJ7Q7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -276,6 +278,8 @@
 		109232F722619DC200F3C2E8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2U2K8SJ7Q7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
