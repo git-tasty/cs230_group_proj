@@ -13,6 +13,7 @@ void TicketList::AddTicket(string userid){
     Ticket newtick;
     string iss;
     string issue;
+    string tickid;
     t -> next = NULL;
     cout << string( 100, '\n' );
     cout<<"========= New Ticket ========="<<endl;
@@ -20,6 +21,9 @@ void TicketList::AddTicket(string userid){
     cin>>iss;
     getline(cin, issue);
     issue = iss + issue;
+    cout<<"Enter a ID to identify your ticket by: ";
+    cin>>tickid;
+    newtick.setTickID(tickid);
     newtick.setIssue(issue);
     newtick.setOwnID(userid);
     
