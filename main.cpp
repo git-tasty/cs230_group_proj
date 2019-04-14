@@ -7,6 +7,7 @@
 //---------- Include ----------------|
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <stdlib.h>
 #include <string>
 #include "User.h"
@@ -27,6 +28,7 @@ int MainMenu();
 int TechMenu();
 int ManagerMenu();
 struct current_login login();
+struct current_login Get_Login_information(std::string User_LoginLevel);
 //---------- Structures -------------|
 struct current_login {
     string first_name;
@@ -266,235 +268,291 @@ int ManagerMenu(){
     cin>>selection;
     return selection;
 }
-/**
- -login Deff-
- Login will present the user with a Menu allowing them to pick what kind of account they want to log into
- this method will also allow new users to be created
- this method will return a current_login structure containing all of the logged in information
- */
-struct current_login login() {
-    //create the structure to allow us to get all information from the login session
-    struct current_login Login_Auth;
-    //login_Auth will contain all the diffrent things we get from the user login
-    int User_AuthLevel = 0;
-    int choice, user_type = 0;
-    int commit = 0;
-    int expertise = 0;
-    string first_name,Last_Name,password, Username, id,the_code;
-    //when the program first loads display starting menu
-    cout << string( 100, '\n' );//clear display
-    cout<<"======= Welcome To AutoTicketing V1.4 ========"<<endl;
-    cout<<"| 1. Create a New Account                    |"<<endl;
-    cout<<"| 2. Customer Login                          |"<<endl;
-    cout<<"| 3. Technician Login                        |"<<endl;
-    cout<<"| 4. Manager Login                           |"<<endl;
-    cout<<"=============================================="<<endl;
-    cout<<"Selection: ";
-    cin>>choice;
-    switch(choice){
-        case 1://Create New User Account
+
+struct current_login Get_Login_information(std::string User_LoginLevel){
+    struct current_login User;//varable to fill with user information
+    std::string User_Username,User_Password,File_FirstName,File_Lastname,File_Username,File_Password,File_ID,FileName,Current_Line;//temp string values
+    std::ifstream UserList_File;//IOstream to file
+    int File_Experience,confirmation = 0;;//temp Experience value,Confirmation value
+    
+    if(User_LoginLevel=="Customer"){//the login type is Customer
+        User.User_AuthLevel = 1;
+        FileName = "Customers.txt";
+    }else{//the login type is Technician
+        User.User_AuthLevel = 2;
+        FileName = "Technicians.txt";
+    }
+    while(confirmation==0){//run Forever untill user loggs in or exits
+        //Start Displaying the Login Menu to the User
+        cout << string( 100, '\n' );
+        cout<<"======= "<<User_LoginLevel<<" Login ======="<<endl;//display what login we are using
+        cout << "Username: ";
+        cin >> User_Username;//prompt for Username
+        cout << "Password: ";
+        cin >> User_Password;//prompt for Password
+        UserList_File.open(FileName);//opens the file
+        while (std::getline(UserList_File, Current_Line))//loop thorough every line in the file
         {
-            while(commit != 1){
-                //This is where we will create a new account
-                //setup the display to look nice :)
-                cout << string( 100, '\n' );
-                cout<<"======= New Account ======="<<endl;
-                cout<<"First Name: ";
-                cin>>first_name;
-                cout<<"Last Name: ";
-                cin>>Last_Name;
-                cout<<"Login Username: ";
-                cin>>Username;
-                cout<<"ID Number: ";
-                cin>>id;
-                cout<<"Login Password: ";
-                cin>>password;
-                cout<<"Are you a (1.)Customer or (2.)Technician: ";
-                cin>>user_type;
-                if(user_type == 2){
-                    cout<<"What is your expertise level? (1.)Beginner, (2.)Intermediate, (3.)Expert: ";
-                    cin>>expertise;
-                }
-                //Here we print all the entered data to the user for confirmation
-                cout << string( 100, '\n' );//clear the screen
-                cout<<"======= Confirm ======="<<endl;
-                if(user_type==1)//check if Customer or Technician
-                    cout<<"Account type: [Customer]"<<endl;
-                else{
-                    cout<<"Account type: [Technician]"<<endl;
-                    if(expertise==1){
-                        cout<<"Expertise Level: [Beginner]"<<endl;
-                    }else if(expertise==2){
-                        cout<<"Expertise Level: [Intermediate]"<<endl;
-                    }else{
-                        cout<<"Expertise Level: [Expert]"<<endl;
-                    }
-                }
-                cout<<"First Name: ["<<first_name<<"]"<<endl;
-                cout<<"Last Name: ["<<Last_Name<<"]"<<endl;
-                cout<<"Username: ["<<Username<<"]"<<endl;
-                cout<<"Password: ["<<password<<"]"<<endl;
-                cout<<"Account ID: ["<<id<<"]"<<endl;
-                cout<<"========================="<<endl;
-                cout<<"Press 1 to Create Account"<<endl<<"Press any other key to Exit"<<endl<<"Choice: ";
-                cin>>commit;
+            std::istringstream iss(Current_Line);
+            if (!(iss >> File_FirstName >> File_Lastname >> File_Username >> File_Password >> File_ID >> File_Experience)) {
+                std::cout << "Your File is Corrupt";
+            } // error
+            if(User_Username==File_Username && File_Password==User_Password){//compare the login provided and the login got from the file
+                //login found and matched to user update login information for return
+                User.first_name = File_FirstName;
+                User.Last_name = File_Lastname;
+                User.Username = File_Username;
+                User.Password = File_Password;
+                User.id = File_ID;
+                User.expertise = File_Experience;
+                confirmation = 1; //user is logged in now
             }
-            if(user_type == 1){//when the user_type is 1 we save the new account to the Customer File
-                expertise=0;
-                User_AuthLevel =1;
-                ofstream custbook;//start file/IO
-                custbook.open("Customers.txt", ios::app);//append Mode
-                custbook<<first_name<<" "<<Last_Name<<" "<<Username<<" "<<password<<" "<<id<<" "<<expertise<<endl;
-                custbook.close();//close the file
-            }else if(user_type == 2){//when the user_type is 2 we save the new account to the Technician File
-                User_AuthLevel=2;
-                ofstream techbook;//start file/IO
-                techbook.open("Technicians.txt", ios::app);//append Mode
-                techbook<<first_name<<" "<<Last_Name<<" "<<Username<<" "<<password<<" "<<id<<" "<<expertise<<endl;
-                techbook.close();//close the file
+        }//end while check if login Failed
+        if(confirmation==0){
+            //If the username entered dosent match any of the usernames inside the system
+            //We need to inform the user and prompt for a retry
+            cout << "======= Login Failed =======" <<endl;
+            cout<<"The Username or Password entered is incorrect"<<endl<<"[Enter 1 To Retry Any Other Key To Exit]...";
+            string Retry_String;
+            cin>>Retry_String;
+            if(Retry_String!="1"){
+                exit(1);//If the user dosent want to retry we can exit the Program
             }
-            break;
         }
-        case 2:
-        {
-            string temp_user, temp_pass, line;
-            int confirmation = 0;
-            while(confirmation == 0){
-                //setup the display to look nice :)
-                cout << string( 100, '\n' );
-                cout<<"======= Customer Login ======="<<endl;
-                cout << "Username: ";
-                cin >> temp_user;
-                cout << "Password: ";
-                cin >> temp_pass;
-                ifstream credentials;//start the file/IO Stream
-                size_t pos;//location of the username in the line
-                while(credentials.good()){
-                    credentials.open("Customers.txt");//open the file
-                    getline(credentials, line);//read the line in from the file
-                    pos=line.find(temp_user);//get the location of the username in the file
-                    if(pos!=string::npos){//check to see if the username exists on the line
-                        pos=line.find(temp_pass);//get the location of the password in the file
-                        if(pos!=string::npos){//check if the password exists on the line we are reading
-                            string temp_name = line;//copy the line
-                            cout<<"======= Login Acceped ======="<<endl;
-                            cout << "Welcome, " << temp_name.substr(0, temp_name.find(" ")) << "!" <<endl;//get the username from the line and print it to the user as the welcome message
-                            User_AuthLevel = 1;//set globsl verifaction to customer
-                            confirmation = 1;//set the global value for loggin in to 1
-                            //first we set the global Username to the username entered becuase we know that the usename worked
-                            Username = temp_user;
-                            //next we copy the string so we can motify it
-                            string tempstring = line;
-                            //first erase the username from the string
-                            tempstring.erase(0, temp_user.length());
-                            //next erase the password from the string
-                            tempstring.erase(tempstring.find(temp_pass),tempstring.length());
-                            //now we can remove all spaces from it
-                            for(int i=0; i<tempstring.length(); i++)
-                                if(tempstring[i] == ' ') tempstring.erase(i,1);
-                            //finaly we save the user id to the global value so it can be passed on
-                            id = tempstring;
-                            break;
+        }
+        return User;
+        }
+        
+        
+        /**
+         -login Deff-
+         Login will present the user with a Menu allowing them to pick what kind of account they want to log into
+         this method will also allow new users to be created
+         this method will return a current_login structure containing all of the logged in information
+         */
+        struct current_login login() {
+            //create the structure to allow us to get all information from the login session
+            struct current_login Login_Auth;
+            //login_Auth will contain all the diffrent things we get from the user login
+            int User_AuthLevel = 0;
+            int choice, user_type = 0;
+            int commit = 0;
+            int expertise = 0;
+            string first_name,Last_Name,password, Username, id,the_code;
+            //when the program first loads display starting menu
+            cout << string( 100, '\n' );//clear display
+            cout<<"======= Welcome To AutoTicketing V1.4 ========"<<endl;
+            cout<<"| 1. Create a New Account                    |"<<endl;
+            cout<<"| 2. Customer Login                          |"<<endl;
+            cout<<"| 3. Technician Login                        |"<<endl;
+            cout<<"| 4. Manager Login                           |"<<endl;
+            cout<<"=============================================="<<endl;
+            cout<<"Selection: ";
+            cin>>choice;
+            switch(choice){
+                case 1://Create New User Account
+                {
+                    while(commit != 1){
+                        //This is where we will create a new account
+                        //setup the display to look nice :)
+                        cout << string( 100, '\n' );
+                        cout<<"======= New Account ======="<<endl;
+                        cout<<"First Name: ";
+                        cin>>first_name;
+                        cout<<"Last Name: ";
+                        cin>>Last_Name;
+                        cout<<"Login Username: ";
+                        cin>>Username;
+                        cout<<"ID Number: ";
+                        cin>>id;
+                        cout<<"Login Password: ";
+                        cin>>password;
+                        cout<<"Are you a (1.)Customer or (2.)Technician: ";
+                        cin>>user_type;
+                        if(user_type == 2){
+                            cout<<"What is your expertise level? (1.)Beginner, (2.)Intermediate, (3.)Expert: ";
+                            cin>>expertise;
+                        }
+                        //Here we print all the entered data to the user for confirmation
+                        cout << string( 100, '\n' );//clear the screen
+                        cout<<"======= Confirm ======="<<endl;
+                        if(user_type==1)//check if Customer or Technician
+                            cout<<"Account type: [Customer]"<<endl;
+                        else{
+                            cout<<"Account type: [Technician]"<<endl;
+                            if(expertise==1){
+                                cout<<"Expertise Level: [Beginner]"<<endl;
+                            }else if(expertise==2){
+                                cout<<"Expertise Level: [Intermediate]"<<endl;
+                            }else{
+                                cout<<"Expertise Level: [Expert]"<<endl;
+                            }
+                        }
+                        cout<<"First Name: ["<<first_name<<"]"<<endl;
+                        cout<<"Last Name: ["<<Last_Name<<"]"<<endl;
+                        cout<<"Username: ["<<Username<<"]"<<endl;
+                        cout<<"Password: ["<<password<<"]"<<endl;
+                        cout<<"Account ID: ["<<id<<"]"<<endl;
+                        cout<<"========================="<<endl;
+                        cout<<"Press 1 to Create Account"<<endl<<"Press any other key to Exit"<<endl<<"Choice: ";
+                        cin>>commit;
+                    }
+                    if(user_type == 1){//when the user_type is 1 we save the new account to the Customer File
+                        expertise=0;
+                        User_AuthLevel =1;
+                        ofstream custbook;//start file/IO
+                        custbook.open("Customers.txt", ios::app);//append Mode
+                        custbook<<first_name<<" "<<Last_Name<<" "<<Username<<" "<<password<<" "<<id<<" "<<expertise<<endl;
+                        custbook.close();//close the file
+                    }else if(user_type == 2){//when the user_type is 2 we save the new account to the Technician File
+                        User_AuthLevel=2;
+                        ofstream techbook;//start file/IO
+                        techbook.open("Technicians.txt", ios::app);//append Mode
+                        techbook<<first_name<<" "<<Last_Name<<" "<<Username<<" "<<password<<" "<<id<<" "<<expertise<<endl;
+                        techbook.close();//close the file
+                    }
+                    break;
+                }
+                case 2:
+                {
+                    string temp_user, temp_pass, line;
+                    int confirmation = 0;
+                    while(confirmation == 0){
+                        //setup the display to look nice :)
+                        cout << string( 100, '\n' );
+                        cout<<"======= Customer Login ======="<<endl;
+                        cout << "Username: ";
+                        cin >> temp_user;
+                        cout << "Password: ";
+                        cin >> temp_pass;
+                        ifstream credentials;//start the file/IO Stream
+                        size_t pos;//location of the username in the line
+                        while(credentials.good()){
+                            credentials.open("Customers.txt");//open the file
+                            getline(credentials, line);//read the line in from the file
+                            pos=line.find(temp_user);//get the location of the username in the file
+                            if(pos!=string::npos){//check to see if the username exists on the line
+                                pos=line.find(temp_pass);//get the location of the password in the file
+                                if(pos!=string::npos){//check if the password exists on the line we are reading
+                                    string temp_name = line;//copy the line
+                                    cout<<"======= Login Acceped ======="<<endl;
+                                    cout << "Welcome, " << temp_name.substr(0, temp_name.find(" ")) << "!" <<endl;//get the username from the line and print it to the user as the welcome message
+                                    User_AuthLevel = 1;//set globsl verifaction to customer
+                                    confirmation = 1;//set the global value for loggin in to 1
+                                    //first we set the global Username to the username entered becuase we know that the usename worked
+                                    Username = temp_user;
+                                    //next we copy the string so we can motify it
+                                    string tempstring = line;
+                                    //first erase the username from the string
+                                    tempstring.erase(0, temp_user.length());
+                                    //next erase the password from the string
+                                    tempstring.erase(tempstring.find(temp_pass),tempstring.length());
+                                    //now we can remove all spaces from it
+                                    for(int i=0; i<tempstring.length(); i++)
+                                        if(tempstring[i] == ' ') tempstring.erase(i,1);
+                                    //finaly we save the user id to the global value so it can be passed on
+                                    id = tempstring;
+                                    break;
+                                }
+                            }
+                        }
+                        //we have to check if the user has allready been authenticated
+                        //if there is more then one user in the database it would fail even if it was right for one of the accounts
+                        if(confirmation==0){
+                            //If the username entered dosent match any of the usernames inside the system
+                            //We need to inform the user and prompt for a retry
+                            cout << "======= Login Failed =======" <<endl;
+                            cout<<"The Username or Password entered is incorrect"<<endl<<"[Enter 1 To Retry Any Other Key To Exit]...";
+                            string Retry_String;
+                            cin>>Retry_String;
+                            if(Retry_String!="1"){
+                                exit(1);//If the user dosent want to retry we can exit the Program
+                            }
                         }
                     }
+                    break;
                 }
-                //we have to check if the user has allready been authenticated
-                //if there is more then one user in the database it would fail even if it was right for one of the accounts
-                if(confirmation==0){
-                    //If the username entered dosent match any of the usernames inside the system
-                    //We need to inform the user and prompt for a retry
-                    cout << "======= Login Failed =======" <<endl;
-                    cout<<"The Username or Password entered is incorrect"<<endl<<"[Enter 1 To Retry Any Other Key To Exit]...";
-                    string Retry_String;
-                    cin>>Retry_String;
-                    if(Retry_String!="1"){
-                        exit(1);//If the user dosent want to retry we can exit the Program
-                    }
-                }
-            }
-            break;
-        }
-        case 3: //technician login
-        {
-            string temp_user, temp_pass, line;
-            int confirmation = 0;
-            while(confirmation == 0){
-                //setup the display to look nice :)
-                cout << string( 100, '\n' );
-                cout<<"======= Technician Login ======="<<endl;
-                cout << "Username: ";
-                cin >> temp_user;
-                cout << "Password: ";
-                cin >> temp_pass;
-                ifstream credentials;
-                size_t pos;
-                while(credentials.good()){
-                    credentials.open("Technicians.txt");
-                    getline(credentials, line);
-                    pos=line.find(temp_user);
-                    if(pos!=string::npos){
-                        pos=line.find(temp_pass);
-                        if(pos!=string::npos){
-                            string temp_name = line;//copy the line
-                            cout<<"======= Login Acceped ======="<<endl;
-                            cout << "Welcome, " << temp_name.substr(0, temp_name.find(" ")) << "!" <<endl;//get the username from the line and print it to the user as the welcome message
-                            User_AuthLevel = 2;//set globsl verifaction to customer
-                            confirmation = 1;//set the global value for loggin in to 1
-                            //first we set the global Username to the username entered becuase we know that the usename worked
-                            Username = temp_user;
-                            //next we copy the string so we can motify it
-                            string tempstring = line;
-                            string temp2 =line;
-                            //first erase the username from the string
-                            tempstring.erase(0, temp_user.length());
-                            //next erase the password from the string
-                            tempstring.erase(tempstring.find(temp_pass),tempstring.length());
-                            //now we can remove all spaces from it
-                            for(int i=0; i<tempstring.length(); i++)
-                                if(tempstring[i] == ' ') tempstring.erase(i,1);
-                            //finaly we save the user id to the global value so it can be passed on
-                            id = tempstring;
-                            //using sscaf to parse the file due to c having more power over strings
-                            char fname[Name_Limit],lname[Name_Limit],uname[Name_Limit],pass[Name_Limit],tid[Name_Limit];
-                            sscanf(tempstring.c_str(), "%s %s %s %s %s %d",&fname,&lname,&uname,&pass,&tid,&expertise);
-                            first_name=fname;
-                            Last_Name = lname;
-                            Username = uname;
-                            password = pass;
-                            id = tid;
-                            cout<<first_name<<Last_Name<<Username<<password<<id<<expertise;
-                            break;
+                case 3: //technician login
+                {
+                    string temp_user, temp_pass, line;
+                    int confirmation = 0;
+                    while(confirmation == 0){
+                        //setup the display to look nice :)
+                        cout << string( 100, '\n' );
+                        cout<<"======= Technician Login ======="<<endl;
+                        cout << "Username: ";
+                        cin >> temp_user;
+                        cout << "Password: ";
+                        cin >> temp_pass;
+                        ifstream credentials;
+                        size_t pos;
+                        while(credentials.good()){
+                            credentials.open("Technicians.txt");
+                            getline(credentials, line);
+                            pos=line.find(temp_user);
+                            if(pos!=string::npos){
+                                pos=line.find(temp_pass);
+                                if(pos!=string::npos){
+                                    string temp_name = line;//copy the line
+                                    cout<<"======= Login Acceped ======="<<endl;
+                                    cout << "Welcome, " << temp_name.substr(0, temp_name.find(" ")) << "!" <<endl;//get the username from the line and print it to the user as the welcome message
+                                    User_AuthLevel = 2;//set globsl verifaction to customer
+                                    confirmation = 1;//set the global value for loggin in to 1
+                                    //first we set the global Username to the username entered becuase we know that the usename worked
+                                    Username = temp_user;
+                                    //next we copy the string so we can motify it
+                                    string tempstring = line;
+                                    string temp2 =line;
+                                    //first erase the username from the string
+                                    tempstring.erase(0, temp_user.length());
+                                    //next erase the password from the string
+                                    tempstring.erase(tempstring.find(temp_pass),tempstring.length());
+                                    //now we can remove all spaces from it
+                                    for(int i=0; i<tempstring.length(); i++)
+                                        if(tempstring[i] == ' ') tempstring.erase(i,1);
+                                    //finaly we save the user id to the global value so it can be passed on
+                                    id = tempstring;
+                                    //using sscaf to parse the file due to c having more power over strings
+                                    char fname[Name_Limit],lname[Name_Limit],uname[Name_Limit],pass[Name_Limit],tid[Name_Limit];
+                                    sscanf(tempstring.c_str(), "%s %s %s %s %s %d",&fname,&lname,&uname,&pass,&tid,&expertise);
+                                    first_name=fname;
+                                    Last_Name = lname;
+                                    Username = uname;
+                                    password = pass;
+                                    id = tid;
+                                    cout<<first_name<<Last_Name<<Username<<password<<id<<expertise;
+                                    break;
+                                }
+                            }
+                            else{
+                                cout << "The username or password you typed is incorrect!" <<endl;
+                            }
                         }
                     }
-                    else{
-                        cout << "The username or password you typed is incorrect!" <<endl;
+                    break;
+                }
+                case 4:
+                {
+                    cout <<"Enter the Code, Chief:";
+                    cin >> the_code;
+                    if(the_code.compare("root") == 0){
+                        User_AuthLevel = 3;
+                        break;
+                    } else{
+                        cout <<"....You're not the Chief...\n";
+                        User_AuthLevel = 0;
+                        break;
                     }
                 }
+                default: cout << choice << " is an invalid Menu_Selectionion!" << endl;
             }
-            break;
+            //log the new user in and pass them back to main
+            Login_Auth.User_AuthLevel = User_AuthLevel;
+            Login_Auth.first_name = first_name;
+            Login_Auth.Last_name = Last_Name;
+            Login_Auth.Username = Username;
+            Login_Auth.Password = password;
+            Login_Auth.id = id;
+            Login_Auth.expertise = expertise;
+            return Login_Auth;//return to main
         }
-        case 4:
-        {
-            cout <<"Enter the Code, Chief:";
-            cin >> the_code;
-            if(the_code.compare("root") == 0){
-                User_AuthLevel = 3;
-                break;
-            } else{
-                cout <<"....You're not the Chief...\n";
-                User_AuthLevel = 0;
-                break;
-            }
-        }
-        default: cout << choice << " is an invalid Menu_Selectionion!" << endl;
-    }
-    //log the new user in and pass them back to main
-    Login_Auth.User_AuthLevel = User_AuthLevel;
-    Login_Auth.first_name = first_name;
-    Login_Auth.Last_name = Last_Name;
-    Login_Auth.Username = Username;
-    Login_Auth.Password = password;
-    Login_Auth.id = id;
-    Login_Auth.expertise = expertise;
-    return Login_Auth;//return to main
-    }
