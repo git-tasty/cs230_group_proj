@@ -17,9 +17,28 @@
 #include "TicketNode.h"
 //---------- ToDo -----------------|
 //TEsting
+//NewTicket in TicketNODE
+//chnage menu to include ticket preview
+//chnage so it auto assignes a ticket to the user
+//chnage menu of Check ticket for user
+//chnage menu of view all tickets for user
+//change menu of get invoice for user
+
+//redo claim ticket for tech
+//redo updating ticket for tech
+//redo view technitions
+//redo Update Ticket
+
+//redo manager see all customers
+//redo manager see all techs
+//redo view all tickets
+//redo close a ticket
+
 //---------- Working -----------------|
 //logging in is 100% working
 //creating an account is 100% working as intended
+//checking for duplacite username
+//checking for USer_ID and auto incrementing them on account creation
 //---------- Define -----------------|
 using namespace std;
 #define Name_Limit 20
