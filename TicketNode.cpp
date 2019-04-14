@@ -94,7 +94,6 @@ void TicketList::PrintTickets(){
 
 void TicketList::MyTickets(string userid){
     double total;
-    std::cout<<userid;
     curr = head;
     while(curr != NULL){
         if(curr -> tick.getOwnID() == userid){
@@ -141,6 +140,7 @@ void TicketList::CheckStatus(string userid, string ticketid){
                 cout<<"Current Status: "<<curr -> tick.getStatus()<<endl;
             }
         }
+        curr = curr -> next;
     }
 }
 
@@ -279,7 +279,7 @@ void TicketList::Save_AllTickets(){
     Ticket TempTicket;
     std::ofstream UserList_File;//IOstream to file
     std::string FileName = "Tickets.txt";
-    UserList_File.open(FileName);//append Mode
+    UserList_File.open("");//append Mode
      if(head != NULL){
          curr = head;
           while(curr != NULL){
@@ -296,7 +296,7 @@ void TicketList::Load_AllTickets(){
     int Current_Save=0;
      std::ifstream UserList_File;//IOstream to file
     std::string FileName="Tickets.txt",Current_Line;
-    UserList_File.open(FileName);//opens the file
+    UserList_File.open("");//opens the file
     while (std::getline(UserList_File, Current_Line))//loop thorough every line in the file
     {
         std::istringstream iss(Current_Line);
