@@ -15,7 +15,7 @@ public:
     void Set_UserType(int User_UserType_in);
     void Set_FirstName(std::string User_FirstName_in);
     void Set_LastName(std::string User_LastName_in);
-    void Set_UserInfo(std::string User_FirstName_in,std::string User_LastName_in,std::string User_Username_in, std::string User_Password_in,int User_UserType_in, std::string User_ID_in);
+    void Set_UserInfo(std::string User_FirstName_in,std::string User_LastName_in,std::string User_Username_in, std::string User_Password_in, std::string User_ID_in);
     void Set_UserInfo(struct current_login Authenticated_User);
     //accessor creation
     std::string Get_Username();

@@ -3,7 +3,7 @@
 
 //constructor definition
 User::User(){
-    Set_UserInfo("","","","",0,"");//set to all default
+    Set_UserInfo("","","","","");//set to all default
 }
 User::User(std::string User_FirstName_in,std::string User_LastName_in,std::string User_Username_in, std::string User_Password_in,int User_UserType_in, std::string User_ID_in){
     Username = User_Username_in;
@@ -40,11 +40,11 @@ void User::Set_FirstName(std::string User_FirstName_in){
 void User::Set_LastName(std::string User_LastName_in){
     LastName=User_LastName_in;
 }
-void User::Set_UserInfo(std::string User_FirstName_in,std::string User_LastName_in,std::string User_Username_in, std::string User_Password_in,int User_UserType_in, std::string User_ID_in){
+void User::Set_UserInfo(std::string User_FirstName_in,std::string User_LastName_in,std::string User_Username_in, std::string User_Password_in, std::string User_ID_in){
     Username = User_Username_in;
     UserID=User_ID_in;
     Password=User_Password_in;
-    UserType = User_UserType_in;
+    UserType = 0;
     FirstName = User_FirstName_in;
     LastName=User_LastName_in;
 }
