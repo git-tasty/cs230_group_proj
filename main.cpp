@@ -20,25 +20,20 @@
 #include "Customer.cpp"
 #include "Technician.cpp"
 #endif
+
 //---------- Define -----------------|
 using namespace std;
 #define Name_Limit 20
+#define Manager_Password "root"
 //------ Function_Prototypes --------|
 int MainMenu();
 int TechMenu();
 int ManagerMenu();
+struct current_login Startup_menu();
 struct current_login login();
 struct current_login Get_Login_information(std::string User_LoginLevel);
-//---------- Structures -------------|
-struct current_login {
-    string first_name;
-    string Last_name;
-    string Username;
-    string Password;
-    string id;
-    int expertise;
-    int User_AuthLevel;
-} customer, technician;
+struct current_login Create_New_Account();
+int Manager_Login();
 //---------- End Setup ---------------|
 /**
  -Main Deff-
@@ -49,54 +44,64 @@ struct current_login {
 int main(int argc, char** argv){
     //---------- Varables ---------------|
     TicketList Tickets;//Tickets is the Linked List of tickets
-    struct current_login Login_Attempt;//Login_Attempt will contian the users login information
+    struct current_login Authenticated_User;//Login_Attempt will contian the users login information
+    string Temp_UserInput;//used for temp user input
     int Menu_Selection;//this will contain the users choice from the main menu
     int User_AuthLevel = 0;//this int will be returned with the account level of the current user
     int exit_status = 0;//used to determin exit of loops
-    string Temp_UserInput;//used for temp user input
+    int choice;
     bool brkLoop = false;//if user decides to Exit loop Will be TRUE
     //----- Login Verifacation ----------|
-    while(exit_status != 1){//while the user has not exited the program
-        while(User_AuthLevel == 0){//while the user still isnt Authenticated
-            Login_Attempt = login();//this method will return the username the ID and the User_AuthLevel level
-            User_AuthLevel = Login_Attempt.User_AuthLevel;//get the Login User_AuthLevel from the Current Login
-        }
-        //----- Customer Verifacation ----------|
-        if (User_AuthLevel == 1){//when the user's AuthLevel is "Customer"
+    Authenticated_User = Startup_menu();//Send User to login Screen and get results as structure
+    //----- Customer Verifacation ----------|
+    switch (Authenticated_User.User_AuthLevel) {
+        case 1://when the user's AuthLevel is "Customer"
+            
+            
+            
+            
+            
+            Menu_Selection = MainMenu();//get the users selection from the main menu
             do{
-                Menu_Selection = MainMenu();//get the users selection from the main menu
-                switch(Menu_Selection){
-                    case 1://Create Ticket
-                        Tickets.AddTicket(Login_Attempt.id);//Call Create Ticket
-                        cout<<endl;
-                        break;
-                    case 2://get status of current ticket
-                        cout<<"Enter the ID of your Ticket that you want the Status of: ";
-                        cin>>Temp_UserInput;
-                        Tickets.CheckStatus(Login_Attempt.id, Temp_UserInput);
-                        break;
-                    case 3://get all current tickets
-                        Tickets.MyTickets(Login_Attempt.id);
-                        break;
-                    case 4://get invoice of single ticket
-                        cout<<"Enter the ID of the ticket that you want the invoice of: ";
-                        cin>>Temp_UserInput;
-                        Tickets.PrintInvoice(Login_Attempt.id, Temp_UserInput);
-                        break;
-                    case 5://logg out of account
-                        User_AuthLevel = 0;
-                        Login_Attempt.Username="";
-                        Login_Attempt.id="";
-                        brkLoop = true;
-                        break;
-                    case 6://exit the program
-                        cout<<"Goodbye!"<<endl;
-                        brkLoop = true;
-                        exit_status = 1;
-                        break;
-                }
-            }while(!brkLoop);
-        }
+            switch(Menu_Selection){
+                case 1://Create Ticket
+                    Tickets.AddTicket(Authenticated_User.id);//Call Create Ticket
+                    cout<<endl;
+                    break;
+                case 2://get status of current ticket
+                    cout<<"Enter the ID of your Ticket that you want the Status of: ";
+                    cin>>Temp_UserInput;
+                    Tickets.CheckStatus(Authenticated_User.id, Temp_UserInput);
+                    break;
+                case 3://get all current tickets
+                    Tickets.MyTickets(Authenticated_User.id);
+                    break;
+                case 4://get invoice of single ticket
+                    cout<<"Enter the ID of the ticket that you want the invoice of: ";
+                    cin>>Temp_UserInput;
+                    Tickets.PrintInvoice(Authenticated_User.id, Temp_UserInput);
+                    break;
+                case 5://logg out of account
+                    Authenticated_User.User_AuthLevel = 0;
+                    Authenticated_User.Username="";
+                    Authenticated_User.id="";
+                    brkLoop = true;
+                    break;
+                case 6://exit the program
+                    cout<<"Goodbye!"<<endl;
+                    brkLoop = true;
+                    exit_status = 1;
+                    break;
+            }
+    }while(!brkLoop);
+            
+            
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+    }
         //----- Technician Verifacation ----------|
         if (User_AuthLevel == 2){ //users Auth Level is technician
             bool brkLoop = false; //used to tell if user wants to exit loop
@@ -211,7 +216,7 @@ int main(int argc, char** argv){
                 }
             }while(!brkLoop);//repeat the entire loop untill the user wish's to exit
         }
-    }//if exit status is true exit loop and end program
+//if exit status is true exit loop and end program
     return 0;
 }
 /**
@@ -269,6 +274,63 @@ int ManagerMenu(){
     return selection;
 }
 
+struct current_login Startup_menu(){
+    int selection;//the users choice
+    struct current_login Login_Attempt;//Login_Attempt will contian the users login information
+    cout << string( 100, '\n' );//clear display
+    cout<<"======= Welcome To AutoTicketing V1.4 ========"<<endl;
+    cout<<"| 1. Create a New Account                    |"<<endl;
+    cout<<"| 2. Customer Login                          |"<<endl;
+    cout<<"| 3. Technician Login                        |"<<endl;
+    cout<<"| 4. Manager Login                           |"<<endl;
+    cout<<"=============================================="<<endl;
+    cout<<"Selection: ";
+    cin>>selection;
+    switch(selection){
+        case 1://Create New User Account
+            Login_Attempt = Create_New_Account();
+            break;
+        case 2://Customer Login
+            Login_Attempt = Get_Login_information("Customer");//Send User to Login Page
+            break;
+        case 3://Tech Login
+            Login_Attempt = Get_Login_information("Technician");//Send User to Login Page
+            break;
+        case 4://Manager Login
+            Login_Attempt.User_AuthLevel = Manager_Login();
+            break;
+    }
+    return Login_Attempt;
+}
+
+int Manager_Login(){
+    std::string User_Password;
+    int confirmation=0,User_AuthLevel = 0;
+    while(confirmation==0){//run Forever untill user loggs in or exits
+        cout << string( 100, '\n' );//clear display
+        cout<<"======= Manager Login ======="<<endl;//display what login we are using
+        cout << "Password: ";
+        cin >> User_Password;//prompt for Password
+        if(User_Password==Manager_Password){
+            //Login Sucess
+            cout<<"======= Login Acceped ======="<<endl;
+            //login found and matched to user update login information for return
+            User_AuthLevel = 3;
+            confirmation = 1;
+        }else{
+            //Login Failed
+            cout << "======= Login Failed =======" <<endl;
+            cout<<"The Manager Password entered is incorrect"<<endl<<"[Enter 1 To Retry Any Other Key To Exit]...";
+            string Retry_String;
+            cin>>Retry_String;
+            if(Retry_String!="1"){
+                exit(1);//If the user dosent want to retry we can exit the Program
+            }
+        }
+    }
+    return User_AuthLevel;
+}
+
 struct current_login Get_Login_information(std::string User_LoginLevel){
     struct current_login User;//varable to fill with user information
     std::string User_Username,User_Password,File_FirstName,File_Lastname,File_Username,File_Password,File_ID,FileName,Current_Line;//temp string values
@@ -298,6 +360,7 @@ struct current_login Get_Login_information(std::string User_LoginLevel){
                 std::cout << "Your File is Corrupt";
             } // error
             if(User_Username==File_Username && File_Password==User_Password){//compare the login provided and the login got from the file
+                cout<<"======= Login Acceped ======="<<endl;
                 //login found and matched to user update login information for return
                 User.first_name = File_FirstName;
                 User.Last_name = File_Lastname;
@@ -323,7 +386,83 @@ struct current_login Get_Login_information(std::string User_LoginLevel){
         return User;
         }
         
-        
+        struct current_login Create_New_Account(){
+            //create the structure to allow us to get all information from the login session
+            struct current_login Login_Auth;
+            std::string first_name,Last_Name,password, Username, id,the_code;
+            int User_AuthLevel = 0,user_type = 0,commit = 0,expertise = 0;
+            while(commit != 1){
+                //This is where we will create a new account
+                //setup the display to look nice :)
+                cout << string( 100, '\n' );
+                cout<<"======= New Account ======="<<endl;
+                cout<<"First Name: ";
+                cin>>first_name;
+                cout<<"Last Name: ";
+                cin>>Last_Name;
+                cout<<"Login Username: ";
+                cin>>Username;
+                cout<<"ID Number: ";
+                cin>>id;
+                cout<<"Login Password: ";
+                cin>>password;
+                cout<<"Are you a (1.)Customer or (2.)Technician: ";
+                cin>>user_type;
+                if(user_type == 2){
+                    cout<<"What is your expertise level? (1.)Beginner, (2.)Intermediate, (3.)Expert: ";
+                    cin>>expertise;
+                }
+                //Here we print all the entered data to the user for confirmation
+                cout << string( 100, '\n' );//clear the screen
+                cout<<"======= Confirm ======="<<endl;
+                if(user_type==1)//check if Customer or Technician
+                    cout<<"Account type: [Customer]"<<endl;
+                else{
+                    cout<<"Account type: [Technician]"<<endl;
+                    if(expertise==1){
+                        cout<<"Expertise Level: [Beginner]"<<endl;
+                    }else if(expertise==2){
+                        cout<<"Expertise Level: [Intermediate]"<<endl;
+                    }else{
+                        cout<<"Expertise Level: [Expert]"<<endl;
+                    }
+                }
+                cout<<"First Name: ["<<first_name<<"]"<<endl;
+                cout<<"Last Name: ["<<Last_Name<<"]"<<endl;
+                cout<<"Username: ["<<Username<<"]"<<endl;
+                cout<<"Password: ["<<password<<"]"<<endl;
+                cout<<"Account ID: ["<<id<<"]"<<endl;
+                cout<<"========================="<<endl;
+                cout<<"Press 1 to Create Account"<<endl<<"Press any other key to Exit"<<endl<<"Choice: ";
+                cin>>commit;
+            }
+            if(user_type == 1){//when the user_type is 1 we save the new account to the Customer File
+                expertise=0;
+                User_AuthLevel =1;
+                ofstream custbook;//start file/IO
+                custbook.open("Customers.txt", ios::app);//append Mode
+                custbook<<first_name<<" "<<Last_Name<<" "<<Username<<" "<<password<<" "<<id<<" "<<expertise<<endl;
+                custbook.close();//close the file
+            }else if(user_type == 2){//when the user_type is 2 we save the new account to the Technician File
+                User_AuthLevel=2;
+                ofstream techbook;//start file/IO
+                techbook.open("Technicians.txt", ios::app);//append Mode
+                techbook<<first_name<<" "<<Last_Name<<" "<<Username<<" "<<password<<" "<<id<<" "<<expertise<<endl;
+                techbook.close();//close the file
+            }
+            Login_Auth.User_AuthLevel = User_AuthLevel;
+            Login_Auth.first_name = first_name;
+            Login_Auth.Last_name = Last_Name;
+            Login_Auth.Username = Username;
+            Login_Auth.Password = password;
+            Login_Auth.id = id;
+            Login_Auth.expertise = expertise;
+            return Login_Auth;//return to main
+        }
+    
+    
+    
+    
         /**
          -login Deff-
          Login will present the user with a Menu allowing them to pick what kind of account they want to log into
@@ -414,62 +553,16 @@ struct current_login Get_Login_information(std::string User_LoginLevel){
                     break;
                 }
                 case 2:
-                {
-                    string temp_user, temp_pass, line;
-                    int confirmation = 0;
-                    while(confirmation == 0){
-                        //setup the display to look nice :)
-                        cout << string( 100, '\n' );
-                        cout<<"======= Customer Login ======="<<endl;
-                        cout << "Username: ";
-                        cin >> temp_user;
-                        cout << "Password: ";
-                        cin >> temp_pass;
-                        ifstream credentials;//start the file/IO Stream
-                        size_t pos;//location of the username in the line
-                        while(credentials.good()){
-                            credentials.open("Customers.txt");//open the file
-                            getline(credentials, line);//read the line in from the file
-                            pos=line.find(temp_user);//get the location of the username in the file
-                            if(pos!=string::npos){//check to see if the username exists on the line
-                                pos=line.find(temp_pass);//get the location of the password in the file
-                                if(pos!=string::npos){//check if the password exists on the line we are reading
-                                    string temp_name = line;//copy the line
-                                    cout<<"======= Login Acceped ======="<<endl;
-                                    cout << "Welcome, " << temp_name.substr(0, temp_name.find(" ")) << "!" <<endl;//get the username from the line and print it to the user as the welcome message
-                                    User_AuthLevel = 1;//set globsl verifaction to customer
-                                    confirmation = 1;//set the global value for loggin in to 1
-                                    //first we set the global Username to the username entered becuase we know that the usename worked
-                                    Username = temp_user;
-                                    //next we copy the string so we can motify it
-                                    string tempstring = line;
-                                    //first erase the username from the string
-                                    tempstring.erase(0, temp_user.length());
-                                    //next erase the password from the string
-                                    tempstring.erase(tempstring.find(temp_pass),tempstring.length());
-                                    //now we can remove all spaces from it
-                                    for(int i=0; i<tempstring.length(); i++)
-                                        if(tempstring[i] == ' ') tempstring.erase(i,1);
-                                    //finaly we save the user id to the global value so it can be passed on
-                                    id = tempstring;
-                                    break;
-                                }
-                            }
-                        }
-                        //we have to check if the user has allready been authenticated
-                        //if there is more then one user in the database it would fail even if it was right for one of the accounts
-                        if(confirmation==0){
-                            //If the username entered dosent match any of the usernames inside the system
-                            //We need to inform the user and prompt for a retry
-                            cout << "======= Login Failed =======" <<endl;
-                            cout<<"The Username or Password entered is incorrect"<<endl<<"[Enter 1 To Retry Any Other Key To Exit]...";
-                            string Retry_String;
-                            cin>>Retry_String;
-                            if(Retry_String!="1"){
-                                exit(1);//If the user dosent want to retry we can exit the Program
-                            }
-                        }
-                    }
+                {//Customer Login
+                    struct current_login TempLogin = Get_Login_information("Customer");//Send User to Login Page
+                    //when we get back a good login we will fill all the information requested
+                    User_AuthLevel = TempLogin.User_AuthLevel ;
+                    first_name = TempLogin.first_name;
+                    Last_Name = TempLogin.Last_name;
+                    Username = TempLogin.Username;
+                    password = TempLogin.Password;
+                    id = TempLogin.id;
+                    expertise = TempLogin.expertise;
                     break;
                 }
                 case 3: //technician login

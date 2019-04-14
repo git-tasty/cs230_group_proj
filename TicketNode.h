@@ -6,6 +6,7 @@ using namespace std;
 #ifndef TICKETNODE_H
 #define TICKETNODE_H
 
+
 class TicketList{
 	
 	public:
