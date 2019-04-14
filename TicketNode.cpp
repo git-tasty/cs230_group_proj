@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include "TicketNode.h"
 
 using namespace std;
@@ -273,3 +275,109 @@ void TicketList::UpdateTicket(string tickid){
         curr = curr -> next;
     }
 } 
+void TicketList::Save_AllTickets(){
+    Ticket TempTicket;
+    std::ofstream UserList_File;//IOstream to file
+    std::string FileName = "Tickets.txt";
+    UserList_File.open(FileName);//append Mode
+     if(head != NULL){
+         curr = head;
+          while(curr != NULL){
+              TempTicket = curr->tick;
+              UserList_File<<TempTicket.getTickID()<<","<<TempTicket.getOwnID()<<","<<TempTicket.getTechName1()<<","<<TempTicket.getTechName2()<<","<<TempTicket.getWorkHours1()<<","<<TempTicket.getWorkHours2()<<","<<TempTicket.getExpertise1()<<","<<TempTicket.getExpertise2()<<","<<TempTicket.getParts()<<","<<TempTicket.getPartCost()<<","<<TempTicket.getIssue()<<","<<TempTicket.getStatus()<<","<<TempTicket.getInstallDate()<<","<<TempTicket.getFinishDate()<<","<<endl;
+              curr = curr->next;
+          }
+     }//while there is information to save
+    UserList_File.close();//close the file
+}
+
+void TicketList::Load_AllTickets(){
+    struct TempTicket temp;
+    int Current_Save=0;
+     std::ifstream UserList_File;//IOstream to file
+    std::string FileName="Tickets.txt",Current_Line;
+    UserList_File.open(FileName);//opens the file
+    while (std::getline(UserList_File, Current_Line))//loop thorough every line in the file
+    {
+        std::istringstream iss(Current_Line);
+        std::string Inner_String;
+        while(getline(iss, Inner_String, ','))
+        {
+            std::istringstream Var_Temp(Inner_String);
+            switch (Current_Save) {
+                case 0:
+                    temp.tickid = Inner_String;
+                    Current_Save++;
+                    break;
+                case 1:
+                    temp.ownid = Inner_String;
+                    Current_Save++;
+                    break;
+                case 2:
+                    temp.techname1 = Inner_String;
+                    Current_Save++;
+                    break;
+                case 3:
+                    temp.techname2 = Inner_String;
+                    Current_Save++;
+                    break;
+                case 4:
+                   Var_Temp >> temp.workhours1;
+                    Current_Save++;
+                    break;
+                case 5:
+                    Var_Temp >> temp.workhours2;
+                    Current_Save++;
+                    break;
+                case 6:
+                    Var_Temp >> temp.expertise1 ;
+                    Current_Save++;
+                    break;
+                case 7:
+                    Var_Temp >> temp.expertise2;
+                    Current_Save++;
+                    break;
+                case 8:
+                    temp.parts = Inner_String;
+                    Current_Save++;
+                    break;
+                case 9:
+                    Var_Temp >> temp.partcost;
+                    Current_Save++;
+                    break;
+                case 10:
+                    temp.issue = Inner_String;
+                    Current_Save++;
+                    break;
+                case 11:
+                    temp.status = Inner_String;
+                    Current_Save++;
+                    break;
+                case 12:
+                    temp.installdate = Inner_String;
+                    Current_Save++;
+                    break;
+                case 13:
+                    temp.finishdate = Inner_String;
+                    Current_Save=0;
+                    break;
+            }
+        }
+        ticketPTR t = new ticket;
+        Ticket TempTicket;
+        TempTicket.Set_TicketInfomration(temp);
+        t -> next = NULL;
+        t -> tick = TempTicket;
+        if(head != NULL){
+            curr = head;
+            while(curr -> next != NULL){
+                curr = curr ->next;
+            }
+            curr -> next = t;
+        }
+        else{
+            head = t;
+        }
+    }
+     UserList_File.close();//close the file for use after
+}

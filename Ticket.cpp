@@ -105,4 +105,19 @@ string Ticket::getInstallDate(){
 string Ticket::getFinishDate(){
 	return finishdate;
 }
-
+void Ticket::Set_TicketInfomration(struct TempTicket Ticket_In){
+    tickid = Ticket_In.tickid;
+    ownid = Ticket_In.ownid;
+    techname1 = Ticket_In.techname1;
+    techname2 = Ticket_In.techname2;
+    workhours1 = Ticket_In.workhours1;
+    workhours2 = Ticket_In.workhours2;
+    expertise1 = Ticket_In.expertise1;
+    expertise2 = Ticket_In.expertise2;
+    parts = Ticket_In.parts;
+    partcost = Ticket_In.partcost;
+    issue = Ticket_In.issue;
+    status = Ticket_In.status;
+    installdate = Ticket_In.installdate;
+    finishdate = Ticket_In.finishdate;
+}

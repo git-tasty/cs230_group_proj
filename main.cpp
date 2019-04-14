@@ -21,7 +21,7 @@
 //TEsting
 //---------- Working -----------------|
 //logging in is 100% working
-//creating an account is 100% working as intended 
+//creating an account is 100% working as intended
 //---------- Define -----------------|
 using namespace std;
 #define Name_Limit 20
@@ -53,10 +53,11 @@ int main(int argc, char** argv){
     int User_AuthLevel = 0;//this int will be returned with the account level of the current user
     int exit_status = 0;//used to determin exit of loops
     bool brkLoop = false;//if user decides to Exit loop Will be TRUE
+    //----- load Alread Created tickets if any ----------|
+    Tickets.Load_AllTickets();
     do{
         //----- Login Verifacation ----------|
         Authenticated_User = Startup_menu();//Send User to login Screen and get results as structure
-        
         switch (Authenticated_User.User_AuthLevel) {
             case 1://when the user's AuthLevel is "Customer"
                 //----- Customer Verifacation ----------|
@@ -68,6 +69,7 @@ int main(int argc, char** argv){
                         case 1://Create Ticket
                             Tickets.AddTicket(LoggedIn_Customer.Get_UserID());//Call Create Ticket
                             cout<<endl;
+                            Tickets.Save_AllTickets();
                             break;
                         case 2://get status of current ticket
                             cout<<"Enter the ID of your Ticket that you want the Status of: ";
@@ -109,6 +111,7 @@ int main(int argc, char** argv){
                             cout<<"Enter ticket ID of the ticket you want to claim: ";
                             cin>>Temp_UserInput;
                             Tickets.ClaimTicket(Temp_UserInput, LoggedIn_Technician.Get_Username()) ;
+                            Tickets.Save_AllTickets();
                             break;
                         case 2://update a ticket
                             cout<<"Enter the ticket id of the ticket you want to update the status of: ";
@@ -121,6 +124,7 @@ int main(int argc, char** argv){
                                 status = "Awaiting-Finalization";
                             }
                             Tickets.UpdateStatus(Temp_UserInput, status);
+                            Tickets.Save_AllTickets();
                             break;
                         case 3://view all current technician's
                         {
@@ -140,6 +144,7 @@ int main(int argc, char** argv){
                             cout<<"Enter the Ticcket ID of the ticket you want to update: ";
                             cin>>Temp_UserInput;
                             Tickets.UpdateTicket(Temp_UserInput);
+                            Tickets.Save_AllTickets();
                             break;
                         case 5://log out of program
                             Authenticated_User.Username = "";
@@ -195,6 +200,7 @@ int main(int argc, char** argv){
                             cout<<"Enter the Ticket ID of the ticket you wish to close: ";
                             cin>>Temp_UserInput;
                             Tickets.UpdateStatus(Temp_UserInput, "Complete");
+                            Tickets.Save_AllTickets();
                             break;
                         case 5://log out of program
                             User_AuthLevel = 0;

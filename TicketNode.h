@@ -22,7 +22,8 @@ class TicketList{
 		void ClaimTicket(string ticckid, string techname);
 		void UpdateStatus(string tickid, string status);
 		void UpdateTicket(string tickid);
-		
+        void Save_AllTickets();
+        void Load_AllTickets();
 	private:
 		typedef struct ticket{
 			Ticket tick;
