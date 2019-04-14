@@ -16,8 +16,6 @@
 #include "Ticket.h"
 #include "TicketNode.h"
 //---------- ToDo -----------------|
-//adding auto incrementing ID for users
-//ading PErsistance for everything Linklist,users,tickets
 //TEsting
 //---------- Working -----------------|
 //logging in is 100% working
@@ -34,6 +32,8 @@ struct current_login Startup_menu();
 struct current_login login();
 struct current_login Get_Login_information(std::string User_LoginLevel);
 struct current_login Create_New_Account();
+bool Check_UsernameExists(std::string UsernameToCheck);
+int GetNextUserID();
 int Manager_Login();
 //---------- End Setup ---------------|
 /**
@@ -333,7 +333,8 @@ struct current_login Startup_menu(){
     
     struct current_login Get_Login_information(std::string User_LoginLevel){
         struct current_login User;//varable to fill with user information
-        std::string User_Username,User_Password,File_FirstName,File_Lastname,File_Username,File_Password,File_ID,FileName,Current_Line;//temp string values
+        std::string User_Username,User_Password,File_FirstName,File_Lastname,File_Username,File_Password,File_ID,Current_Line;//temp string values
+        string FileName;
         std::ifstream UserList_File;//IOstream to file
         int File_Experience,confirmation = 0;;//temp Experience value,Confirmation value
         FileName="";
@@ -389,12 +390,13 @@ struct current_login Startup_menu(){
     
     struct current_login Create_New_Account(){
         //create the structure to allow us to get all information from the login session
+        //pull all used usernames
+        //pull what ID we are using next
         struct current_login Login_Auth;
         std::string first_name,Last_Name,password, Username, id,the_code;
         int User_AuthLevel = 0,user_type = 0,commit = 0,expertise = 0;
         while(commit != 1){
             //This is where we will create a new account
-            //setup the display to look nice :)
             cout << string( 100, '\n' );
             cout<<"======= New Account ======="<<endl;
             cout<<"First Name: ";
@@ -403,8 +405,14 @@ struct current_login Startup_menu(){
             cin>>Last_Name;
             cout<<"Login Username: ";
             cin>>Username;
-            cout<<"ID Number: ";
-            cin>>id;
+            while(Check_UsernameExists(Username)){
+                cout<<"============ Note =========="<<endl;
+                cout<<"The Username Entered Already Exists"<<endl<<"Please Choose Another Username"<<endl;
+                cout<<"=========================="<<endl;
+                cout<<"Login Username: ";
+                cin>>Username;
+            }
+            id = std::to_string(GetNextUserID());
             cout<<"Login Password: ";
             cin>>password;
             cout<<"Are you a (1.)Customer or (2.)Technician: ";
@@ -459,4 +467,71 @@ struct current_login Startup_menu(){
         Login_Auth.id = id;
         Login_Auth.expertise = expertise;
         return Login_Auth;//return to main
+    }
+  bool Check_UsernameExists(std::string UsernameToCheck){
+      std::string FileName = "Customers.txt",Current_Line;
+      std::string User_Username,User_Password,File_FirstName,File_Lastname,File_Username,File_Password,File_ID;//temp string values
+      std::ifstream UserList_File;//IOstream to file
+      int File_Experience;//temp Experience value,Confirmation value
+      bool Username_exists=false;
+      UserList_File.open(FileName);//opens the file
+      while (std::getline(UserList_File, Current_Line))//check customer id's
+      {
+          std::istringstream iss(Current_Line);
+          if (!(iss >> File_FirstName >> File_Lastname >> File_Username >> File_Password >> File_ID >> File_Experience)) {
+              std::cout << "Your File is Corrupt";
+          } // error parsing
+          if(UsernameToCheck==File_Username){
+              Username_exists = true;
+          }
+      }
+      UserList_File.close();
+      FileName = "Technicians.txt";
+      UserList_File.open(FileName);//opens the file
+      while (std::getline(UserList_File, Current_Line))//check tech usernames
+      {
+          std::istringstream iss(Current_Line);
+          if (!(iss >> File_FirstName >> File_Lastname >> File_Username >> File_Password >> File_ID >> File_Experience)) {
+              std::cout << "Your File is Corrupt";
+          } // error parsing
+          if(UsernameToCheck==File_Username){
+              Username_exists = true;
+          }
+      }
+      UserList_File.close();
+      return Username_exists;
+    }
+
+int GetNextUserID(){
+    int Next_Userid =0;
+    std::string FileName = "Customers.txt",Current_Line;
+    std::string User_Username,User_Password,File_FirstName,File_Lastname,File_Username,File_Password;//temp string values
+    std::ifstream UserList_File;//IOstream to file
+    int File_Experience,File_ID;//temp Experience value,Confirmation value
+    UserList_File.open(FileName);//opens the file
+    while (std::getline(UserList_File, Current_Line))//check customer id's
+    {
+        std::istringstream iss(Current_Line);
+        if (!(iss >> File_FirstName >> File_Lastname >> File_Username >> File_Password >> File_ID >> File_Experience)) {
+            std::cout << "Your File is Corrupt";
+        } // error parsing
+        if(File_ID>Next_Userid){
+            Next_Userid = File_ID;
+        }
+    }
+    UserList_File.close();
+    FileName = "Technicians.txt";
+    UserList_File.open(FileName);//opens the file
+    while (std::getline(UserList_File, Current_Line))//check tech usernames
+    {
+        std::istringstream iss(Current_Line);
+        if (!(iss >> File_FirstName >> File_Lastname >> File_Username >> File_Password >> File_ID >> File_Experience)) {
+            std::cout << "Your File is Corrupt";
+        } // error parsing
+        if(File_ID>Next_Userid){
+            Next_Userid = File_ID;
+        }
+    }
+    UserList_File.close();
+    return Next_Userid+1;
     }
