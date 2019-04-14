@@ -1,8 +1,6 @@
 #include <iostream>
 #include "User.h"
 
-using namespace std;
-
 #ifndef TECHNICIAN_H
 #define TECHNICIAN_H
 
@@ -10,10 +8,11 @@ class Technician: public User{
 	
 	public:
 		Technician();
-		void setExpertise(int expert);
-		int getExpertise();
+    Technician(struct current_login Authenticated_User);
+		void Set_ExpertiseLevel(int User_ExpertiseLevel);
+		int Get_ExpertiseLevel();
 	private:
-		int expertise;
+		int ExpertiseLevel;
 	
 };
 #endif

@@ -8,11 +8,10 @@ class Customer: public User{
 	
 	public:
 		Customer();
+        Customer(struct current_login Authenticated_User);
 		
 	private:
-		
-		
-	
+
 };
 
 #endif

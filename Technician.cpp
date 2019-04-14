@@ -1,18 +1,18 @@
 #include "Technician.h"
 #include <iostream>
 
-using namespace std;
-
 Technician::Technician(){
-	setInfo("","","");
-	setType(2);
-	setExpertise(0);
+    Set_UserInfo("","","","","");
+    Set_UserType(2);
+	Set_ExpertiseLevel(0);
 }
-
-void Technician::setExpertise(int expertise){
-	expertise = expertise;
-} 
-
-int Technician::getExpertise(){
-	return expertise;
+Technician::Technician(struct current_login Authenticated_User){
+    Set_UserInfo(Authenticated_User);
+    Set_ExpertiseLevel(Authenticated_User.expertise);
+}
+void Technician::Set_ExpertiseLevel(int User_ExpertiseLevel){
+    ExpertiseLevel = User_ExpertiseLevel;
+}
+int Technician::Get_ExpertiseLevel(){
+    return ExpertiseLevel;
 }

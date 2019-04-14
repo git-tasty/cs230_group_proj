@@ -23,6 +23,7 @@ class Ticket{
 		void setStatus(string status);
 		void setInstallDate(string installdate);
 		void setFinishDate(string finishdate);
+        void Set_TicketInfomration(struct TempTicket Ticket_In);
 		
 		string getTickID();
 		string getOwnID();
@@ -57,6 +58,22 @@ class Ticket{
 		
 		
 		
+};
+struct TempTicket{
+    string tickid;
+    string ownid;
+    string techname1;
+    string techname2;
+    double workhours1;
+    double workhours2;
+    int expertise1;
+    int expertise2;
+    string parts;
+    double partcost;
+    string issue;
+    string status;
+    string installdate;
+    string finishdate;
 };
 
 #endif
