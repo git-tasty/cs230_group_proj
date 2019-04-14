@@ -15,12 +15,13 @@
 #include "Technician.h"
 #include "Ticket.h"
 #include "TicketNode.h"
-#ifdef _WIN32
-#include "User.cpp"
-#include "Customer.cpp"
-#include "Technician.cpp"
-#endif
-
+//---------- ToDo -----------------|
+//adding auto incrementing ID for users
+//ading PErsistance for everything Linklist,users,tickets
+//TEsting
+//---------- Working -----------------|
+//logging in is 100% working
+//creating an account is 100% working as intended 
 //---------- Define -----------------|
 using namespace std;
 #define Name_Limit 20
@@ -329,7 +330,7 @@ struct current_login Startup_menu(){
         std::string User_Username,User_Password,File_FirstName,File_Lastname,File_Username,File_Password,File_ID,FileName,Current_Line;//temp string values
         std::ifstream UserList_File;//IOstream to file
         int File_Experience,confirmation = 0;;//temp Experience value,Confirmation value
-        
+        FileName="";
         if(User_LoginLevel=="Customer"){//the login type is Customer
             User.User_AuthLevel = 1;
             FileName = "Customers.txt";
