@@ -10,30 +10,10 @@
 #include <sstream>
 #include <stdlib.h>
 #include <string>
-#include "User.h"
-#include "Customer.h"
-#include "Technician.h"
 #include "Ticket.h"
 #include "TicketNode.h"
 //---------- ToDo -----------------|
 //TEsting
-//NewTicket in TicketNODE
-//chnage menu to include ticket preview
-//chnage so it auto assignes a ticket to the user
-//chnage menu of Check ticket for user
-//chnage menu of view all tickets for user
-//change menu of get invoice for user
-
-//redo claim ticket for tech
-//redo updating ticket for tech
-//redo view technitions
-//redo Update Ticket
-
-//redo manager see all customers
-//redo manager see all techs
-//redo view all tickets
-//redo close a ticket
-
 //---------- Working -----------------|
 //logging in is 100% working
 //creating an account is 100% working as intended
@@ -68,6 +48,7 @@ int main(int argc, char** argv){
     Technician LoggedIn_Technician;//Technician Object
     struct current_login Authenticated_User;//Login_Attempt will contian the users login information
     string Temp_UserInput;//used for temp user input
+    int Temp_intInput;
     int Menu_Selection;//this will contain the users choice from the main menu
     int User_AuthLevel = 0;//this int will be returned with the account level of the current user
     int exit_status = 0;//used to determin exit of loops
@@ -86,22 +67,24 @@ int main(int argc, char** argv){
                     Menu_Selection = MainMenu();//get the users selection from the main menu
                     switch(Menu_Selection){
                         case 1://Create Ticket
-                            Tickets.AddTicket(LoggedIn_Customer.Get_UserID());//Call Create Ticket
+                            Tickets.Set_NewTicket(LoggedIn_Customer);//Call Create Ticket
                             cout<<endl;
+                            
+                            
                             Tickets.Save_AllTickets();
                             break;
                         case 2://get status of current ticket
                             cout<<"Enter the ID of your Ticket that you want the Status of: ";
-                            cin>>Temp_UserInput;
-                            Tickets.CheckStatus(LoggedIn_Customer.Get_UserID(), Temp_UserInput);
+                            cin>>Temp_intInput;
+                            Tickets.Get_TicketStatus(LoggedIn_Customer, Temp_intInput);
                             break;
                         case 3://get all current tickets
-                            Tickets.MyTickets(LoggedIn_Customer.Get_UserID());
+                            Tickets.Get_AllTickets(LoggedIn_Customer);
                             break;
                         case 4://get invoice of single ticket
                             cout<<"Enter the ID of the ticket that you want the invoice of: ";
-                            cin>>Temp_UserInput;
-                            Tickets.PrintInvoice(LoggedIn_Customer.Get_UserID(), Temp_UserInput);
+                            cin>>Temp_intInput;
+                            Tickets.Get_Invoice(LoggedIn_Customer, Temp_intInput);
                             break;
                         case 5://logg out of account
                             Authenticated_User.User_AuthLevel = 0;
@@ -128,13 +111,13 @@ int main(int argc, char** argv){
                     switch(Menu_Selection){
                         case 1://claim a ticket
                             cout<<"Enter ticket ID of the ticket you want to claim: ";
-                            cin>>Temp_UserInput;
-                            Tickets.ClaimTicket(Temp_UserInput, LoggedIn_Technician.Get_Username()) ;
+                            cin>>Temp_intInput;
+                            Tickets.ClaimCustomerTicket(Temp_intInput, LoggedIn_Technician) ;
                             Tickets.Save_AllTickets();
                             break;
                         case 2://update a ticket
                             cout<<"Enter the ticket id of the ticket you want to update the status of: ";
-                            cin>>Temp_UserInput;
+                            cin>>Temp_intInput;
                             cout<<"Enter a 1 for In-Progress or a 2 for Awaiting-Finalization: ";
                             cin>>choice;
                             if(choice == 1){
@@ -142,7 +125,7 @@ int main(int argc, char** argv){
                             }if(choice == 2){
                                 status = "Awaiting-Finalization";
                             }
-                            Tickets.UpdateStatus(Temp_UserInput, status);
+                            Tickets.UpdateStatus(Temp_intInput, status);
                             Tickets.Save_AllTickets();
                             break;
                         case 3://view all current technician's
@@ -161,8 +144,8 @@ int main(int argc, char** argv){
                             break;
                         case 4://update ticket
                             cout<<"Enter the Ticcket ID of the ticket you want to update: ";
-                            cin>>Temp_UserInput;
-                            Tickets.UpdateTicket(Temp_UserInput);
+                            cin>>Temp_intInput;
+                            Tickets.UpdateTicket(Temp_intInput);
                             Tickets.Save_AllTickets();
                             break;
                         case 5://log out of program
@@ -213,12 +196,10 @@ int main(int argc, char** argv){
                         } break;
                             
                         case 3://print all tickets
-                            Tickets.PrintTickets();
+                            Tickets.Get_AllTickets();
                             break;
                         case 4:
-                            cout<<"Enter the Ticket ID of the ticket you wish to close: ";
-                            cin>>Temp_UserInput;
-                            Tickets.UpdateStatus(Temp_UserInput, "Complete");
+                            Tickets.UpdateStatus(Tickets.CloseTicket(), "Complete");
                             Tickets.Save_AllTickets();
                             break;
                         case 5://log out of program
@@ -487,70 +468,70 @@ struct current_login Startup_menu(){
         Login_Auth.expertise = expertise;
         return Login_Auth;//return to main
     }
-  bool Check_UsernameExists(std::string UsernameToCheck){
-      std::string FileName = "Customers.txt",Current_Line;
-      std::string User_Username,User_Password,File_FirstName,File_Lastname,File_Username,File_Password,File_ID;//temp string values
-      std::ifstream UserList_File;//IOstream to file
-      int File_Experience;//temp Experience value,Confirmation value
-      bool Username_exists=false;
-      UserList_File.open(FileName);//opens the file
-      while (std::getline(UserList_File, Current_Line))//check customer id's
-      {
-          std::istringstream iss(Current_Line);
-          if (!(iss >> File_FirstName >> File_Lastname >> File_Username >> File_Password >> File_ID >> File_Experience)) {
-              std::cout << "Your File is Corrupt";
-          } // error parsing
-          if(UsernameToCheck==File_Username){
-              Username_exists = true;
-          }
-      }
-      UserList_File.close();
-      FileName = "Technicians.txt";
-      UserList_File.open(FileName);//opens the file
-      while (std::getline(UserList_File, Current_Line))//check tech usernames
-      {
-          std::istringstream iss(Current_Line);
-          if (!(iss >> File_FirstName >> File_Lastname >> File_Username >> File_Password >> File_ID >> File_Experience)) {
-              std::cout << "Your File is Corrupt";
-          } // error parsing
-          if(UsernameToCheck==File_Username){
-              Username_exists = true;
-          }
-      }
-      UserList_File.close();
-      return Username_exists;
-    }
-
-int GetNextUserID(){
-    int Next_Userid =0;
-    std::string FileName = "Customers.txt",Current_Line;
-    std::string User_Username,User_Password,File_FirstName,File_Lastname,File_Username,File_Password;//temp string values
-    std::ifstream UserList_File;//IOstream to file
-    int File_Experience,File_ID;//temp Experience value,Confirmation value
-    UserList_File.open(FileName);//opens the file
-    while (std::getline(UserList_File, Current_Line))//check customer id's
-    {
-        std::istringstream iss(Current_Line);
-        if (!(iss >> File_FirstName >> File_Lastname >> File_Username >> File_Password >> File_ID >> File_Experience)) {
-            std::cout << "Your File is Corrupt";
-        } // error parsing
-        if(File_ID>Next_Userid){
-            Next_Userid = File_ID;
+    bool Check_UsernameExists(std::string UsernameToCheck){
+        std::string FileName = "Customers.txt",Current_Line;
+        std::string User_Username,User_Password,File_FirstName,File_Lastname,File_Username,File_Password,File_ID;//temp string values
+        std::ifstream UserList_File;//IOstream to file
+        int File_Experience;//temp Experience value,Confirmation value
+        bool Username_exists=false;
+        UserList_File.open(FileName);//opens the file
+        while (std::getline(UserList_File, Current_Line))//check customer id's
+        {
+            std::istringstream iss(Current_Line);
+            if (!(iss >> File_FirstName >> File_Lastname >> File_Username >> File_Password >> File_ID >> File_Experience)) {
+                std::cout << "Your File is Corrupt";
+            } // error parsing
+            if(UsernameToCheck==File_Username){
+                Username_exists = true;
+            }
         }
-    }
-    UserList_File.close();
-    FileName = "Technicians.txt";
-    UserList_File.open(FileName);//opens the file
-    while (std::getline(UserList_File, Current_Line))//check tech usernames
-    {
-        std::istringstream iss(Current_Line);
-        if (!(iss >> File_FirstName >> File_Lastname >> File_Username >> File_Password >> File_ID >> File_Experience)) {
-            std::cout << "Your File is Corrupt";
-        } // error parsing
-        if(File_ID>Next_Userid){
-            Next_Userid = File_ID;
+        UserList_File.close();
+        FileName = "Technicians.txt";
+        UserList_File.open(FileName);//opens the file
+        while (std::getline(UserList_File, Current_Line))//check tech usernames
+        {
+            std::istringstream iss(Current_Line);
+            if (!(iss >> File_FirstName >> File_Lastname >> File_Username >> File_Password >> File_ID >> File_Experience)) {
+                std::cout << "Your File is Corrupt";
+            } // error parsing
+            if(UsernameToCheck==File_Username){
+                Username_exists = true;
+            }
         }
+        UserList_File.close();
+        return Username_exists;
     }
-    UserList_File.close();
-    return Next_Userid+1;
+    
+    int GetNextUserID(){
+        int Next_Userid =0;
+        std::string FileName = "Customers.txt",Current_Line;
+        std::string User_Username,User_Password,File_FirstName,File_Lastname,File_Username,File_Password;//temp string values
+        std::ifstream UserList_File;//IOstream to file
+        int File_Experience,File_ID;//temp Experience value,Confirmation value
+        UserList_File.open(FileName);//opens the file
+        while (std::getline(UserList_File, Current_Line))//check customer id's
+        {
+            std::istringstream iss(Current_Line);
+            if (!(iss >> File_FirstName >> File_Lastname >> File_Username >> File_Password >> File_ID >> File_Experience)) {
+                std::cout << "Your File is Corrupt";
+            } // error parsing
+            if(File_ID>Next_Userid){
+                Next_Userid = File_ID;
+            }
+        }
+        UserList_File.close();
+        FileName = "Technicians.txt";
+        UserList_File.open(FileName);//opens the file
+        while (std::getline(UserList_File, Current_Line))//check tech usernames
+        {
+            std::istringstream iss(Current_Line);
+            if (!(iss >> File_FirstName >> File_Lastname >> File_Username >> File_Password >> File_ID >> File_Experience)) {
+                std::cout << "Your File is Corrupt";
+            } // error parsing
+            if(File_ID>Next_Userid){
+                Next_Userid = File_ID;
+            }
+        }
+        UserList_File.close();
+        return Next_Userid+1;
     }
