@@ -1,79 +1,65 @@
 #include <iostream>
-
-using namespace std;
+#include "Customer.h"
+#include "Technician.h"
 
 #ifndef TICKET_H
 #define TICKET_H
 
 class Ticket{
-	
-	public:
-		Ticket();
-		void setTickID(string tickid);
-		void setOwnID(string ownid);
-		void setTechName1(string techname);
-		void setTechName2(string techname);
-		void setWorkHours1(double workhours);
-		void setWorkHours2(double workhours);
-		void setExpertise1(int expertise);
-		void setExpertise2(int expertise);
-		void setParts(string parts);
-		void setPartCost(double partcost);
-		void setIssue(string issue);
-		void setStatus(string status);
-		void setInstallDate(string installdate);
-		void setFinishDate(string finishdate);
-        void Set_TicketInfomration(struct TempTicket Ticket_In);
-		
-		string getTickID();
-		string getOwnID();
-		string getTechName1();
-		string getTechName2();
-		double getWorkHours1();
-		double getWorkHours2();
-		int getExpertise1();
-		int getExpertise2();
-		string getParts();
-		double getPartCost();
-		string getIssue();
-		string getStatus();
-		string getInstallDate();
-		string getFinishDate();
-		
-	private:
-		string tickid;
-		string ownid;
-		string techname1;
-		string techname2;
-		double workhours1;
-		double workhours2;
-		int expertise1;
-		int expertise2;
-		string parts;
-		double partcost;
-		string issue;
-		string status;
-		string installdate;
-		string finishdate;
-		
-		
-		
+    
+public:
+    Ticket();
+    void Set_TickID(int New_TicketID);
+    void Set_Owner(Customer Authenticated_Customer);
+    void Set_Worker1(Technician Authenticated_Technician);
+    void Set_Worker2(Technician Authenticated_Technician);
+    void Set_WorkerHours(Technician Authenticated_Technician,double New_Hour);
+    void Set_PartList(std::string New_Parts);
+    void Set_PartCost(double New_PartCost);
+    void Set_TicketTitle(std::string New_Title);
+    void Set_TicketDescription(std::string New_Issue);
+    void Set_TicketStatus(std::string New_Status);
+    void Set_InstallDate(std::string NewInstallDate);
+    void Set_FinishDate(std::string NewFinishDate);
+    void Set_TicketInfomration(struct TempTicket Ticket_In);
+    
+    int Get_TicketID();
+    Customer Get_Owner();
+    Technician Get_Technician1();
+    Technician Get_Technician2();
+    double Get_WorkerHours(Technician Authenticated_Technician);
+    std::string Get_PartList();
+    double Get_PartCost();
+    std::string Get_TicketTitle();
+    std::string Get_TicketDescription();
+    std::string Get_TicketStatus();
+    std::string Get_PartInstallDate();
+    std::string Get_TicketFinishDate();
+private:
+    int Ticket_ID;
+    Customer Owner;
+    Technician Worker1;
+    Technician Worker2;
+    std::string Ticket_PartsUsed;
+    double Ticket_Partcost;
+    std::string Ticket_Title;
+    std::string Ticket_Description;
+    std::string Ticket_Status;
+    std::string Part_InstallDate;
+    std::string Ticket_FinishDate;
 };
 struct TempTicket{
-    string tickid;
-    string ownid;
-    string techname1;
-    string techname2;
-    double workhours1;
-    double workhours2;
-    int expertise1;
-    int expertise2;
-    string parts;
-    double partcost;
-    string issue;
-    string status;
-    string installdate;
-    string finishdate;
+    int Ticket_ID;
+    Customer Owner;
+    Technician Worker1;
+    Technician Worker2;
+    std::string Ticket_PartsUsed;
+    double Ticket_Partcost;
+    std::string Ticket_Title;
+    std::string Ticket_Description;
+    std::string Ticket_Status;
+    std::string Part_InstallDate;
+    std::string Ticket_FinishDate;
 };
 
 #endif
