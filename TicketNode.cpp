@@ -72,7 +72,7 @@ void TicketList::Get_AllTickets(){
             }else{
                 cout<<"Technicians Currently Working On Ticket 0/2"<<endl;
             }
-            cout<<"==========================================="<<endl;
+            cout<<"================================================================"<<endl;
             curr = curr->next;
         }
     }else{
@@ -87,14 +87,15 @@ void TicketList::Get_AllTickets(Customer Authenticated_Customer){
     while(curr != NULL){
         if(curr -> tick.Get_Owner().Get_UserID() == Authenticated_Customer.Get_UserID()){
             total = 0;
-            cout<<"Ticket Title: "<<curr->tick.Get_TicketTitle()<<endl;
-            cout<<"Ticket ID: "<<curr->tick.Get_TicketID()<<endl;
-            cout<<"Ticket Owner's Name: "<<curr->tick.Get_Owner().Get_FirstName()<<" "<<curr->tick.Get_Owner().Get_LastName()<<endl;
-            cout<<"Ticket Owners Username: "<<curr->tick.Get_Owner().Get_Username()<<endl;
-            cout<<"First Technician: "<<curr->tick.Get_Technician1().Get_FirstName()<<" "<<curr->tick.Get_Technician1().Get_LastName()<<endl;
-            cout<<"First Technician's Username: "<<curr->tick.Get_Technician1().Get_Username()<<endl;
-            cout<<"Seccond Technician: "<<curr->tick.Get_Technician2().Get_FirstName()<<" "<<curr->tick.Get_Technician2().Get_LastName()<<endl;
-            cout<<"Seccond Technician's Username: "<<curr->tick.Get_Technician2().Get_Username()<<endl;
+            cout<<"Ticket Title: "<<curr->tick.Get_TicketTitle()<<endl;//displays ticket title
+            cout<<"Ticket ID: "<<curr->tick.Get_TicketID()<<endl;//diaplys ticket id
+            cout<<"Ticket Owner's Name: "<<curr->tick.Get_Owner().Get_FirstName()<<" "<<curr->tick.Get_Owner().Get_LastName()<<endl;//displays ticket owner name
+            cout<<"Ticket Owners Username: "<<curr->tick.Get_Owner().Get_Username()<<endl;//owners username
+            cout<<"First Technician: "<<curr->tick.Get_Technician1().Get_FirstName()<<" "<<curr->tick.Get_Technician1().Get_LastName()<<endl;//tech 1 name
+            cout<<"First Technician's Username: "<<curr->tick.Get_Technician1().Get_Username()<<endl;//tech 1 username
+            cout<<"Seccond Technician: "<<curr->tick.Get_Technician2().Get_FirstName()<<" "<<curr->tick.Get_Technician2().Get_LastName()<<endl;//tech 2 name
+            cout<<"Seccond Technician's Username: "<<curr->tick.Get_Technician2().Get_Username()<<endl;//tech 2 username
+            //logic for labor pricing
             if(curr -> tick.Get_Technician1().Get_ExpertiseLevel() == 1){
                 total = total + curr -> tick.Get_Technician1().Get_WorkHours() * 100;
             }else if(curr ->tick.Get_Technician1().Get_ExpertiseLevel() == 2){
@@ -109,15 +110,15 @@ void TicketList::Get_AllTickets(Customer Authenticated_Customer){
             }else if(curr ->tick.Get_Technician2().Get_ExpertiseLevel() == 3){
                 total = total + curr -> tick.Get_Technician2().Get_WorkHours() * 250;
             }
-            cout<<"Total Labor Costs: $"<<total<<endl;
-            cout<<"Parts Required/Ordered For Ticket: "<<curr -> tick.Get_PartList()<<endl;
-            cout<<"Total Parts Cost: "<<curr -> tick.Get_PartCost()<<endl;
-            cout<<"Stated Issue: "<<curr -> tick.Get_TicketDescription()<<endl;
-            cout<<"Parts installed on: "<<curr -> tick.Get_PartInstallDate()<<endl;
-            cout<<"Current Status: "<<curr -> tick.Get_TicketStatus()<<endl;
-            cout<<"Finish Date: "<<curr -> tick.Get_TicketFinishDate()<<endl;
+            cout<<"Total Labor Costs: $"<<total<<endl;//total labor cost
+            cout<<"Parts Required/Ordered For Ticket: "<<curr -> tick.Get_PartList()<<endl;//parts ordered
+            cout<<"Total Parts Cost: "<<curr -> tick.Get_PartCost()<<endl;//part costs
+            cout<<"Stated Issue: "<<curr -> tick.Get_TicketDescription()<<endl;//issue from user
+            cout<<"Parts installed on: "<<curr -> tick.Get_PartInstallDate()<<endl;//date parts were installed
+            cout<<"Current Status: "<<curr -> tick.Get_TicketStatus()<<endl;//ticket status
+            cout<<"Finish Date: "<<curr -> tick.Get_TicketFinishDate()<<endl;//finish date
             total = total + curr-> tick.Get_PartCost();
-            cout<<"Total Cost: $"<<total<<endl;
+            cout<<"Total Cost: $"<<total<<endl;//total cost
             cout<<"==========================================="<<endl;
         }
         curr = curr -> next;
@@ -134,13 +135,13 @@ int TicketList::Get_NextUserID(){
     }
     return Next_UserID+1;
 }
-
+//displays status of entered ticket
 void TicketList::Get_TicketStatus(Customer Authenticated_Customer, int Ticket_ID){
     curr = head;
     while(curr != NULL){
         if(curr -> tick.Get_Owner().Get_UserID() == Authenticated_Customer.Get_UserID()){
             if(curr -> tick.Get_TicketID() == Ticket_ID){
-                cout<<"Current Status: "<<curr -> tick.Get_TicketStatus()<<endl;
+                cout<<"Current Status: "<<curr -> tick.Get_TicketStatus()<<endl;//status of selected ticket
             }
         }
         curr = curr -> next;
@@ -155,14 +156,15 @@ void TicketList::Get_Invoice(Customer Authenticated_Customer, int Ticket_ID){
             if(curr -> tick.Get_TicketID() == Ticket_ID){
                 if(curr -> tick.Get_TicketStatus() == "Complete"){
                     total = 0;
-                    cout<<"Ticket Title: "<<curr->tick.Get_TicketTitle()<<endl;
-                    cout<<"Ticket ID: "<<curr->tick.Get_TicketID()<<endl;
-                    cout<<"Ticket Owner's Name: "<<curr->tick.Get_Owner().Get_FirstName()<<" "<<curr->tick.Get_Owner().Get_LastName()<<endl;
-                    cout<<"Ticket Owners Username: "<<curr->tick.Get_Owner().Get_Username()<<endl;
-                    cout<<"First Technician: "<<curr->tick.Get_Technician1().Get_FirstName()<<" "<<curr->tick.Get_Technician1().Get_LastName()<<endl;
-                    cout<<"First Technician's Username: "<<curr->tick.Get_Technician1().Get_Username()<<endl;
-                    cout<<"Seccond Technician: "<<curr->tick.Get_Technician2().Get_FirstName()<<" "<<curr->tick.Get_Technician2().Get_LastName()<<endl;
-                    cout<<"Seccond Technician's Username: "<<curr->tick.Get_Technician2().Get_Username()<<endl;
+                    cout<<"Ticket Title: "<<curr->tick.Get_TicketTitle()<<endl;//ticket title
+                    cout<<"Ticket ID: "<<curr->tick.Get_TicketID()<<endl;//ticket id
+                    cout<<"Ticket Owner's Name: "<<curr->tick.Get_Owner().Get_FirstName()<<" "<<curr->tick.Get_Owner().Get_LastName()<<endl;//owner name
+                    cout<<"Ticket Owners Username: "<<curr->tick.Get_Owner().Get_Username()<<endl;//owner username
+                    cout<<"First Technician: "<<curr->tick.Get_Technician1().Get_FirstName()<<" "<<curr->tick.Get_Technician1().Get_LastName()<<endl;//tech 1 name
+                    cout<<"First Technician's Username: "<<curr->tick.Get_Technician1().Get_Username()<<endl;//tech 1 username
+                    cout<<"Seccond Technician: "<<curr->tick.Get_Technician2().Get_FirstName()<<" "<<curr->tick.Get_Technician2().Get_LastName()<<endl;//tech 2 name
+                    cout<<"Seccond Technician's Username: "<<curr->tick.Get_Technician2().Get_Username()<<endl;//tech 2 username
+                    //logic for labor pricing
                     if(curr -> tick.Get_Technician1().Get_ExpertiseLevel() == 1){
                         total = total + curr -> tick.Get_Technician1().Get_WorkHours() * 100;
                     }else if(curr ->tick.Get_Technician1().Get_ExpertiseLevel() == 2){
@@ -177,15 +179,15 @@ void TicketList::Get_Invoice(Customer Authenticated_Customer, int Ticket_ID){
                     }else if(curr ->tick.Get_Technician2().Get_ExpertiseLevel() == 3){
                         total = total + curr -> tick.Get_Technician2().Get_WorkHours() * 250;
                     }
-                    cout<<"Total Labor Costs: $"<<total<<endl;
-                    cout<<"Parts Required/Ordered For Ticket: "<<curr -> tick.Get_PartList()<<endl;
-                    cout<<"Total Parts Cost: "<<curr -> tick.Get_PartCost()<<endl;
-                    cout<<"Stated Issue: "<<curr -> tick.Get_TicketDescription()<<endl;
-                    cout<<"Parts installed on: "<<curr -> tick.Get_PartInstallDate()<<endl;
-                    cout<<"Current Status: "<<curr -> tick.Get_TicketStatus()<<endl;
-                    cout<<"Finish Date: "<<curr -> tick.Get_TicketFinishDate()<<endl;
-                    total = total + curr-> tick.Get_PartCost();
-                    cout<<"Total Cost: $"<<total<<endl;
+                    cout<<"Total Labor Costs: $"<<total<<endl;//total labor cost
+                    cout<<"Parts Required/Ordered For Ticket: "<<curr -> tick.Get_PartList()<<endl;//parts used
+                    cout<<"Total Parts Cost: "<<curr -> tick.Get_PartCost()<<endl;//part cost
+                    cout<<"Stated Issue: "<<curr -> tick.Get_TicketDescription()<<endl;//ticket issue from customer
+                    cout<<"Parts installed on: "<<curr -> tick.Get_PartInstallDate()<<endl;//date partrs were installed
+                    cout<<"Current Status: "<<curr -> tick.Get_TicketStatus()<<endl;//shows ticket status
+                    cout<<"Finish Date: "<<curr -> tick.Get_TicketFinishDate()<<endl;//date ticket was finished
+                    total = total + curr-> tick.Get_PartCost();//part costs
+                    cout<<"Total Cost: $"<<total<<endl;//total costs
                     cout<<"==========================================="<<endl;
                 }else{
                     cout<<"No invoice is available for this ticket yet as it is not complete."<<endl;
@@ -195,16 +197,16 @@ void TicketList::Get_Invoice(Customer Authenticated_Customer, int Ticket_ID){
         curr = curr -> next;
     }
 } 
-
+//adding techs to tickets
 void TicketList::ClaimCustomerTicket(int Ticket_ID, Technician Authenticated_Technician){
     curr = head;
     while(curr != NULL){
         if(curr ->tick.Get_TicketID() == Ticket_ID){
             if(curr -> tick.Get_Technician1().Get_Username() == ""){
-                curr -> tick.Set_Worker1(Authenticated_Technician);
+                curr -> tick.Set_Worker1(Authenticated_Technician);//setting techs
                 cout<<"You have been added to Ticket "<<Ticket_ID<<endl;
                 
-            }else if(curr -> tick.Get_Technician1().Get_Username() != "" && curr->tick.Get_Technician2().Get_Username() == ""){
+            }else if(curr -> tick.Get_Technician1().Get_Username() != "" && curr->tick.Get_Technician2().Get_Username() == ""){//sets tech 2
                 curr -> tick.Set_Worker2(Authenticated_Technician);
                 cout<<"You have been added to Ticket "<<Ticket_ID<<endl;
             }else{
@@ -219,19 +221,22 @@ int TicketList::CloseTicket(){
     curr = head;
     cout<<"================== All Tickets =================="<<endl;
     while(curr != NULL){
-        cout<<"ID: "<<curr -> tick.Get_TicketID()<<" | Owner: "<<curr -> tick.Get_Owner().Get_FirstName()<<" | Title: "<<curr -> tick.Get_TicketTitle()<<endl;
-        curr = curr -> next;
+    	if(curr -> tick.Get_TicketStatus() != "Complete"){
+		
+        	cout<<"ID: "<<curr -> tick.Get_TicketID()<<" | Owner: "<<curr -> tick.Get_Owner().Get_FirstName()<<" | Title: "<<curr -> tick.Get_TicketTitle()<<endl;
+       		curr = curr -> next;//lists all tickets if they are not complete
+    	}
     }
     cout<<"Enter the ID of the ticket you want to close: ";
     cin>>Temp_TicketID;
     return Temp_TicketID;
 }
-
+//method for updating ticket statuses
 void TicketList::UpdateStatus(int Ticket_ID, std::string Ticket_Status){
     curr = head;
     while(curr != NULL){
         if(curr -> tick.Get_TicketID() == Ticket_ID){
-            curr -> tick.Set_TicketStatus(Ticket_Status);
+            curr -> tick.Set_TicketStatus(Ticket_Status);//sets status of selected ticket
         }
         curr = curr -> next;
     }
@@ -245,6 +250,7 @@ void TicketList::UpdateTicket(int Ticket_ID){
             Technician TempTech1 = curr->tick.Get_Technician1();
             Technician TempTech2 = curr->tick.Get_Technician2();
             while(select != 7){
+            	//menu for update options
                 cout<<"======== Ticket Update Menu ========"<<endl;
                 if(TempTech1.Get_Username()!=""){
                     cout<<"| 1. Update "<<TempTech1.Get_FirstName()<<"'s Hours"<<endl;
@@ -265,34 +271,34 @@ void TicketList::UpdateTicket(int Ticket_ID){
                 string part;
                 string parts;
                 string date;
-                if(select == 1){
+                if(select == 1){//option to update tech 1 hours
                     if(TempTech1.Get_Username()!=""){
                         cout<<"How many hours did "<<TempTech1.Get_FirstName()<<" Work: ";
                         cin>>hours;
                         curr->tick.Set_WorkerHours(TempTech1, hours);
                     }
-                }else if(select == 2){
+                }else if(select == 2){//option to update tech 2 hours
                     if(TempTech1.Get_Username()!=""){
                         cout<<"How many hours did "<<TempTech2.Get_FirstName()<<" Work: ";
                         cin>>hours;
                         curr->tick.Set_WorkerHours(TempTech2, hours);
                     }
-                }else if(select == 3){
+                }else if(select == 3){//option to update parts used
                     cout<<"What Parts were used: ";
                     cin>>part;
                     getline(cin, parts);
                     parts = part + parts;
                     curr -> tick.Set_PartList(parts);
-                }else if(select == 4){
+                }else if(select == 4){//option to update part costs
                     cout<<"How much did the parts cost: ";
                     cin>>partcost;
                     curr -> tick.Set_PartCost(partcost);
-                }else if(select == 5){
+                }else if(select == 5){//option to update installation date
                     cout<<"The format for date is mm-dd-yyyy"<<endl;
                     cout<<"What day were the parts installed: ";
                     cin>>date;
                     curr -> tick.Set_InstallDate(date);
-                }else if(select == 6){
+                }else if(select == 6){//option to update finish date
                     cout<<"The format for date is mm-dd-yyyy"<<endl;
                     cout<<"What day was the ticket finished: ";
                     cin>>date;
@@ -303,6 +309,7 @@ void TicketList::UpdateTicket(int Ticket_ID){
         curr = curr -> next;
     }
 } 
+//saves all tickets to file
 void TicketList::Save_AllTickets(){
     Ticket TempTicket;
     std::ofstream UserList_File;//IOstream to file
@@ -327,7 +334,7 @@ void TicketList::Save_AllTickets(){
     }//while there is information to save
     UserList_File.close();//close the file
 }
-
+//loads all tickets from file
 void TicketList::Load_AllTickets(){
     struct TempTicket temp;
     int Check_Line=0;

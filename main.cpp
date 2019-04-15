@@ -1,9 +1,9 @@
 //CS-230 Final Group Project
 //Deisnged by
 //-Andrew Thumma
-//-Username
-//-Username
-//-Username
+//-Evan Kamuf
+//-Alexander Barnes
+//-Jared Pridgeon
 //---------- Include ----------------|
 #include <iostream>
 #include <fstream>
@@ -12,14 +12,6 @@
 #include <string>
 #include "Ticket.h"
 #include "TicketNode.h"
-//---------- ToDo -----------------|
-//TEsting
-//---------- Working -----------------|
-//logging in is 100% working
-//creating an account is 100% working as intended
-//checking for duplicate username
-//checking for User_ID and auto incrementing them on account creation
-//---------- Define -----------------|
 using namespace std;
 #define Name_Limit 20
 #define Manager_Password "root"
@@ -36,7 +28,7 @@ int GetNextUserID();
 int Manager_Login();
 //---------- End Setup ---------------|
 /**
- -Main Deff-
+ -Main Def-
  Main holds the linked list and login information
  the user can log into diffrent levels of accounts and create and motify tickets
  the end goal was to design this project around a ticketing system
@@ -220,7 +212,7 @@ int main(int argc, char** argv){
     return 0;
 }
 /**
- -MainMenu Deff-
+ -MainMenu Def-
  This is the menu displayed to the Customer when they first log in
  */
 int MainMenu(){
@@ -238,7 +230,7 @@ int MainMenu(){
     return selection;
 }
 /**
- -TechMenu Deff-
+ -TechMenu Def-
  This is the menu displayed to the Technicians when they first log in
  */
 int TechMenu(){
@@ -256,7 +248,7 @@ int TechMenu(){
     return selection;
 }
 /**
- -ManagerMenu Deff-
+ -ManagerMenu Def-
  This is the menu displayed to the Manager when they first log in
  */
 int ManagerMenu(){
