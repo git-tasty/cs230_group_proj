@@ -412,7 +412,9 @@ struct current_login Startup_menu(){
                 cout<<"Login Username: ";
                 cin>>Username;
             }
-            id = std::to_string(GetNextUserID());
+            std::ostringstream Var_Temp;
+            Var_Temp << GetNextUserID();
+             id = Var_Temp.str();
             cout<<"Login Password: ";
             cin>>password;
             cout<<"Are you a (1.)Customer or (2.)Technician: ";
